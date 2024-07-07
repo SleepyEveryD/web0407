@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+  <link rel="stylesheet" href="header.css"> <!-- 引入外部 CSS 文件 -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .title {
+      margin-top: 20px;
+      font-size: 2em;
+      color: #333;
+    }
+    .container {
+      display: flex;
+      width: 80%;
+      max-width: 1000px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .left-panel, .right-panel {
+      padding: 20px;
+      width: 50%;
+    }
+    .left-panel {
+      background-color: #007bff;
+      color: white;
+    }
+    .right-panel {
+      background-color: #f8f9fa;
+      color: #333;
+      overflow-y: auto;
+    }
+    .btn-create-group {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    .btn-create-group:hover {
+      background-color: #218838;
+    }
+    .group-list {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .group-list th, .group-list td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    .group-list th {
+      background-color: #007bff;
+      color: white;
+      text-align: center; /* 居中文本 */
+    }
+    .group-list td {
+      text-align: center; /* 居中文本 */
+    }
+    .group-list td a {
+      text-decoration: none;
+      color: #007bff;
+      transition: color 0.3s;
+    }
+    .group-list td a:hover {
+      color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <!-- Include your header content here -->
+</header>
+<h1 class="title">HOMEPAGE</h1>
+<div class="container">
+  <div class="left-panel">
+    <h2>Create_New_Group</h2>
+    <a href="#" class="btn-create-group">创建小组</a>
+  </div>
+  <div class="right-panel">
+    <h2 style="text-align: center;">My_Group</h2>
+    <table class="group-list">
+      <thead>
+      <tr>
+        <th>Group ID</th>
+        <th>Title</th>
+      </tr>
+      </thead>
+      <tbody>
+     // wait for table
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

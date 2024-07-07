@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            width: 80%;
+            max-width: 1000px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .left-panel, .right-panel {
+            padding: 20px;
+            width: 50%;
+        }
+        .left-panel {
+            background-color: #007bff;
+            color: white;
+        }
+        .right-panel {
+            background-color: #f8f9fa;
+            color: #333;
+            overflow-y: auto;
+        }
+        .btn-create-group {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .btn-create-group:hover {
+            background-color: #218838;
+        }
+        .group-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .group-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .group-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="left-panel">
+        <h2>create_group</h2>
+        <a href="#" class="btn-create-group">创建小组</a>
+    </div>
+    <div class="right-panel">
+        <h2>我的小组</h2>
+        <ul class="group-list">
+        //wait for tabel
+        </ul>
+    </div>
+</div>
+</body>
+</html>

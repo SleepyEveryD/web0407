@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="login_register.css " />
+  <link rel="stylesheet" href="header.css" />
+</head>
+<body>
+
+<nav class="h-navbar">
+  <div class="h-navbar-container h-container">
+
+    <ul class="h-menu-items">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="myActivity">My activity</a></li>
+      <li><a href="createGroup">New Activity</a></li>
+      <li><a href="login">Log in </a></li>
+      <li><a href="#about">About</a></li>
+
+    </ul>
+    <h1 class="h-logo">PA</h1>
+  </div>
+</nav>
+
+<div class="login-page">
+  <form class="form login-form" action="login" method="post">
+    <label class="toggle-label">Login</label>
+    <input type="text" placeholder="Email" name="email" required/>
+    <input type="password" placeholder="Password" name="password" required/>
+    <div th:if="${session.loginError != null}" th:text="${session.loginError}" class="error-message"></div>
+    <button>Login</button>
+    <p class="message">
+      Not registered? <a href="register.html">Create an account</a>
+    </p>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Group</title>
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="createGroup.css">
+</head>
+<body>
+
+<nav class="h-navbar">
+  <div class="h-navbar-container h-container">
+    <ul class="h-menu-items">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="myActivity">My activity</a></li>
+      <li><a href="createGroup">New Activity</a></li>
+      <li><a href="login">Log in</a></li>
+
+    </ul>
+    <h1 class="h-logo">PA</h1>
+  </div>
+</nav>
+
+<div class="container">
+  <h1>CREATE NEW GROUP</h1>
+  <div th:if="${session.createGroupError != null}" th:text="${session.createGroupError}" class="error-message"></div>
+  <form id="groupForm" method="post" action="createGroup">
+    <label for="groupName">Title:</label>
+    <input type="text" id="groupName" name="groupName" required>
+    <label for="minMembers">Min num of members:</label>
+    <input type="number" id="minMembers" name="minMembers" min="1" required>
+    <label for="maxMembers">Max num of members:</label>
+    <input type="number" id="maxMembers" name="maxMembers" min="1" required>
+    <label for="duration">Duration (days):</label>
+    <input type="number" id="duration" name="duration" min="1" required>
+    <button id="selectMembersBtn" class="btn">Go to select members</button>
+    <input type="hidden" name="action" value="setGroupInfo">
+  </form>
+</div>
+
+</body>
+</html>

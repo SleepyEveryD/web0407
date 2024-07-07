@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Creation Failed</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    .message-box {
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .message-box h1 {
+      color: #ff0000;
+    }
+  </style>
+  <script>
+    // Function to redirect after 3 seconds
+    function redirectAfterDelay() {
+      setTimeout(function() {
+        window.location.href = "index.html"; // Change this to the actual home page URL
+      }, 3000);
+    }
+  </script>
+</head>
+<body onload="redirectAfterDelay()">
+<div class="message-box">
+  <h1>Group Creation Failed, Too Many Requests</h1>
+  <p>You will be redirected to the home page in 3 seconds...</p>
+</div>
+</body>
+</html>
