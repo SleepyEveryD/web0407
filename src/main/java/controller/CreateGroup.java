@@ -1,31 +1,9 @@
 package controller;
-import beans.Group;
-import beans.User;
-import dao.GroupDAO;
-import dao.UserDAO;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import utils.ConnectionHandler;
-import utils.Util;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+/*
 
 @WebServlet("/createGroup")
 public class CreateGroup extends HttpServlet {
-    ArrayList<String> invitedUsers = null;
+    String[] invitedUsers = null;
     int attempts = 0;
     TemplateEngine templateEngine;
     boolean selectingMembers = false;
@@ -41,70 +19,105 @@ public class CreateGroup extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
 
-        User creatorUser = (User) request.getSession().getAttribute("user");
-        String creatorEmail = creatorUser.getEmail();
-        System.out.println(creatorEmail);
+            HttpSession session = request.getSession();
+            WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
 
-        String actionType = request.getParameter("action");
-        if (actionType.equals("selectMembers")){
-            System.out.println("test> CreateGroup> selectMember");
-            String[] selectedUsers = request.getParameterValues("selectedMembers");
+            User creatorUser = (User) request.getSession().getAttribute("user");
+            String creatorEmail = creatorUser.getEmail();
+            System.out.println(creatorEmail);
 
-            System.out.println("test> CreateGroup> selectMember selectedUsers: " + selectedUsers.length);
-            Group group =(Group)request.getSession().getAttribute("group");
-            int minMembers = group.getMinPeople();
-            int maxMembers = group.getMaxPeople();
-            if (selectedUsers == null || selectedUsers.length < minMembers || selectedUsers.length > maxMembers){
-                attempts ++;
-                if (attempts == 3){
-                    response.sendRedirect("create_failure.html");
-                    return;
-                }
-                    selectMembersError = "Please select at least " + minMembers + " and at most " + maxMembers + " members. You have "+( 3-attempts)+ " attempts left.";
-                response.sendRedirect("createGroup");
-            }else{
-                ArrayList<String> selectedUsersList = new ArrayList<>(Arrays.asList(selectedUsers));
+            String actionType = request.getParameter("action");
 
+            if (actionType != null &&actionType.equals("selectMembers")){
+                System.out.println("test> CreateGroup> selectMember");
+                invitedUsers = request.getParameterValues("selectedMembers");
+
+                System.out.println("test> CreateGroup> selectMember invitedUsers: " + invitedUsers.length);
+                Group group =(Group)request.getSession().getAttribute("group");
+                int minMembers = 0;
+                int maxMembers = 0;
                 try {
-                    GroupDAO groupDAO = new GroupDAO(ConnectionHandler.getConnection(getServletContext()));
-                    int groupID = groupDAO.registerGroup(group.getTitle(),creatorEmail, group.getMaxPeople(),group.getMinPeople(), group.getDuration(),selectedUsersList );
-                    if (groupID!= 0) group.setGroupId(groupID);
-                    selectingMembers = false;
-                    attempts = 0;
+                     minMembers = group.getMinPeople();
+                     maxMembers = group.getMaxPeople();
+                    if (minMembers < 0 || maxMembers < 0 || maxMembers < minMembers) {
+                        throw new IllegalArgumentException("minMmbers and maxMembers can not be negativ");
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                if (invitedUsers == null || invitedUsers.length < minMembers || invitedUsers.length > maxMembers ){
+                    attempts ++;
+                    if (attempts >= 3){
+                        response.sendRedirect("create_failure.html");
+                        selectingMembers = false;
+                        attempts = 0;
+                        invitedUsers = null;
+                        return;
+                    }
+                    if (minMembers> invitedUsers.length)  selectMembersError = " Please select " +(minMembers-invitedUsers.length) + " more. You have "+( 3-attempts)+ " attempts left.";
+                    if (maxMembers < invitedUsers.length) selectMembersError = " Please select " +(invitedUsers.length-maxMembers) + " less. You have "+( 3-attempts)+ " attempts left.";
+                    response.sendRedirect("createGroup");
+                }else{
+                    ArrayList<String> selectedUsersList = new ArrayList<>(Arrays.asList(invitedUsers));
+
+                    try {
+                        GroupDAO groupDAO = new GroupDAO(ConnectionHandler.getConnection(getServletContext()));
+
+                        int groupID = groupDAO.registerGroup(group.getTitle(),creatorEmail, group.getMaxPeople(),group.getMinPeople(), group.getDuration(),selectedUsersList );
+                        if (groupID!= 0) group.setGroupId(groupID);
+                        selectingMembers = false;
+                        attempts = 0;
+                        this.invitedUsers = null;
+                        request.setAttribute("action","setGroupInfo");
+                        response.sendRedirect("myActivity");
+                    } catch (IllegalAccessException | SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+
+
+            }else if (actionType != null &&actionType.equals("setGroupInfo")){
+
+                String groupName = request.getParameter("groupName");
+                Group group =(Group)request.getSession().getAttribute("group");
+                int minMembers = 0;
+                int maxMembers = 0;
+                int duration = 0;
+                try {
+                    minMembers = group.getMinPeople();
+                    maxMembers = group.getMaxPeople();
+                    if (minMembers < 0 || maxMembers < 0 || maxMembers < minMembers) {
+                        throw new IllegalArgumentException("minMmbers and maxMembers can not be negativ");
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                 minMembers = Integer.parseInt(request.getParameter("minMembers"));
+                 maxMembers = Integer.parseInt(request.getParameter("maxMembers"));
+                 duration = Integer.parseInt(request.getParameter("duration"));
+
+                System.out.println("test> CreateGroup> setGroupInfo minMembers: " + minMembers + " maxMembers: " + maxMembers);
+                 group = new Group(groupName, creatorUser, minMembers, maxMembers,duration);
+                session.setAttribute("group", group);
+                if (minMembers> maxMembers||duration<0){
+                    request.getSession().setAttribute("createGroupError", "max num of members can not be smaller than min num of members. or durantion must be more than 0 days");
+                    templateEngine.process("createGroup.html", webContext, response.getWriter());
+
+                }else {
+                    session.setAttribute("actionType","selectMember");
+                    System.out.println("test> attribute actionType set to selectMember");
                     invitedUsers = null;
-                    response.sendRedirect("myActivity");
-                } catch (IllegalAccessException | SQLException e) {
-                    throw new RuntimeException(e);
+                    selectingMembers = true;
+                    attempts = 0;
+                    response.sendRedirect("createGroup");
+
                 }
 
             }
 
-
-        }else if (actionType.equals("setGroupInfo")){
-            String groupName = request.getParameter("groupName");
-            int minMembers = Integer.parseInt(request.getParameter("minMembers"));
-            int maxMembers = Integer.parseInt(request.getParameter("maxMembers"));
-            int duration = Integer.parseInt(request.getParameter("duration"));
-            System.out.println("test> CreateGroup> setGroupInfo minMembers: " + minMembers + " maxMembers: " + maxMembers);
-            Group group = new Group(groupName, creatorUser, minMembers, maxMembers,duration);
-            session.setAttribute("group", group);
-            if (minMembers> maxMembers){
-                request.getSession().setAttribute("createGroupError", "max num of members can not be smaller than min num of members.");
-                templateEngine.process("createGroup.html", webContext, response.getWriter());
-
-            }else {
-                session.setAttribute("actionType","selectMember");
-                System.out.println("test> attribute actionType set to selectMember");
-                invitedUsers = new ArrayList<>();
-                selectingMembers = true;
-                response.sendRedirect("createGroup");
-
-            }
-
-        }
 
 
     }
@@ -120,9 +133,14 @@ public class CreateGroup extends HttpServlet {
                 attempts = 0;
                 selectingMembers =false;
                 invitedUsers = null;
+                selectMembersError = "";
             }
-            if (!selectingMembers)  response.sendRedirect("createGroup.html");
+
+            if (!selectingMembers) {
+                response.sendRedirect("createGroup.html");
+            }
             else{
+                if (attempts == 0) selectMembersError = null;
                 String html = Util.selectMembersStatic;
                 System.out.println(html);
                 ArrayList<User> users = null;
@@ -139,12 +157,12 @@ public class CreateGroup extends HttpServlet {
                 String [][] matrix   = new String[users.size()][4];
                 for(int i=0;i< users.size();i++){
                     matrix[i][0] = "checkbox";
-                    matrix[i][2] = users.get(i).getName();
-                    matrix[i][1] = users.get(i).getSurname();
+                    matrix[i][2] = users.get(i).getUsername();
                     matrix[i][3] = users.get(i).getEmail();
                 }
+                Arrays.sort(matrix, Comparator.comparing(row -> row[1]));
 
-                String htmlContent = Util.writeTableToHtml("createGroup", matrix,selectMembersError, user.getEmail());
+                String htmlContent = Util.writeTableToHtml("createGroup", matrix,selectMembersError, user.getEmail(),invitedUsers);
                 request.getSession().setAttribute("actionType","selectMember");
 
                 response.setContentType("text/html;charset=UTF-8");
@@ -171,3 +189,5 @@ public class CreateGroup extends HttpServlet {
 
     
 }
+
+ */

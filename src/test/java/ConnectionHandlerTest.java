@@ -38,14 +38,14 @@ class ConnectionHandlerTest {
                 // 通过列名检索
                 String email = rs.getString("email");
                 String password = rs.getString("password");
-                String name = rs.getString("name");
-                String surname = rs.getString("surname");
+                String username = rs.getString("username");
+
 
                 // 输出数据
                 System.out.print("Email: " + email);
                 System.out.print(", Password: " + password);
-                System.out.print(", Name: " + name);
-                System.out.println(", Surname: " + surname);
+                System.out.println(", username: " + username);
+
             }
 
             // 关闭资源
@@ -180,6 +180,7 @@ class ConnectionHandlerTest {
                 // 输出数据
                 System.out.print("groupId: " + groupId);
                 System.out.print(", email: " + email);
+                System.out.println();
 
             }
             // 关闭资源

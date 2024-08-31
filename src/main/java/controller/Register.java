@@ -46,31 +46,42 @@ public class Register extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         HttpSession session = request.getSession();
         WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
-        String name = request.getParameter("name");
-        String surname = request.getParameter("surname");
+
+        // 获取表单数据
+        String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String passwordConfirmation = request.getParameter("passwordConfirmation");
-        System.out.println("test> register" + name + " " + surname + " " + email + " " + password + " " + passwordConfirmation);
-        if (!passwordConfirmation.equals(password)){ session.setAttribute("registerError", "Please enter same passwords");
-        templateEngine.process("register.html", webContext, response.getWriter());}
+
+        // 打印日志
+        System.out.println("test> register " + username + " " + email + " " + password + " " + passwordConfirmation);
+
+        // 检查密码是否匹配
+        if (!passwordConfirmation.equals(password)) {
+            session.setAttribute("registerError", "Please enter the same passwords");
+            templateEngine.process("register.html", webContext, response.getWriter());
+            return;
+        }
+
+        // 检查邮箱格式是否有效
         if (!isValidEmail(email)) {
             session.setAttribute("registerError", "Invalid email format");
             templateEngine.process("register.html", webContext, response.getWriter());
             return;
         }
+
         try {
             UserDAO userDAO = new UserDAO(ConnectionHandler.getConnection(getServletContext()));
-            if(userDAO.checkUserExist(email)){
+
+            // 检查邮箱是否已经注册
+            if (userDAO.checkUserExist(email)) {
                 session.setAttribute("registerError", "Email already registered");
                 templateEngine.process("register.html", webContext, response.getWriter());
-
-            }
-            else {
-                userDAO.registerUser(name, surname, email, password);
+            } else {
+                // 注册用户
+                userDAO.registerUser(username, email, password);
                 session.removeAttribute("registerError");
                 response.sendRedirect("login");
                 System.out.println("register successful");
@@ -79,6 +90,7 @@ public class Register extends HttpServlet {
             e.printStackTrace();
         }
     }
+
     private boolean isValidEmail(String email) {
         // 使用正则表达式验证电子邮件格式
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";

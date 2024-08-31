@@ -1,0 +1,157 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    width: 80%;
+    max-width: 1000px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.left-panel, .right-panel {
+    padding: 20px;
+    width: 50%;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width */
+}
+
+.left-panel {
+    background-color: #f0f0f0; /* Light gray background */
+    color: #333; /* Dark gray text */
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ddd; /* Border to separate panels */
+}
+
+.right-panel {
+    background-color: #f8f9fa; /* Light background for the right panel */
+    color: #333;
+    overflow-y: auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Space between header and list */
+}
+
+.header h2 {
+    margin: 0;
+    flex: 1; /* Allow the heading to take available space */
+}
+
+.btn-create-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff; /* White background */
+    color: #007bff; /* Blue color */
+    font-size: 24px;
+    text-decoration: none;
+    border: 2px solid #007bff; /* Blue border */
+    transition: background-color 0.3s, color 0.3s;
+    margin-left: 10px; /* Space between title and button */
+}
+
+.btn-create-group:hover {
+    background-color: #007bff; /* Background color on hover */
+    color: white; /* Text color on hover */
+}
+
+.btn-upload-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff; /* White background */
+    border: 2px solid #007bff; /* Blue border */
+    margin-left: 10px; /* Space between the create button and the upload button */
+    overflow: hidden; /* Ensure the image fits within the circle */
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+}
+
+.btn-upload-image img {
+    width: 24px; /* Adjust the size of the icon */
+    height: 24px;
+}
+
+.album-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Ensure the list takes the full width of the panel */
+}
+
+.album-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.album-list li:last-child {
+    border-bottom: none;
+}
+
+.album-list a {
+    color: inherit;
+    text-decoration: none;
+    display: block; /* Ensure the link takes the full width of the list item */
+}/* 其他样式保持不变 */
+/* 隐藏checkbox */
+#modalToggle {
+    display: none;
+}
+
+/* 模态窗背景 */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* 置于顶层 */
+}
+
+/* 模态窗内容 */
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px; /* 可根据需要调整大小 */
+    z-index: 1001;
+}
+
+/* 当checkbox被选中时显示模态窗 */
+#modalToggle:checked ~ .modal-overlay {
+    display: block;
+}
+
+/* 关闭按钮 */
+.close-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    float: right;
+}

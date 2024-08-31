@@ -45,50 +45,38 @@ public class Login extends HttpServlet {
         templateEngine.setTemplateResolver(templateResolver);
         templateResolver.setSuffix(".html");
     }
-
+    // handle login request
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
         WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
+        System.out.println( "email: " + email + " password: " + password);
         try {
             UserDAO userDAO = new UserDAO(ConnectionHandler.getConnection(getServletContext()));
-            if (userDAO.loginUser(email,password)==null) {
+            User user = userDAO.loginUser(email,password);
+            if (user==null) {
                 session.setAttribute("loginError", "Wrong email or password please check");
                 templateEngine.process("login.html", webContext, response.getWriter());
             } else {
-                User user = userDAO.loginUser(email,password);
                 session.setAttribute("user", user);
                 session.removeAttribute("loginError");
-                response.sendRedirect("index.html");
-                MainController.addOnlineUser(user);
+                response.sendRedirect("homepage");
+                System.out.println("user logged in" + user.getEmail() + ", username" + user.getUsername() );
+
             }
         } catch (IllegalAccessException | SQLException e) {
             e.printStackTrace();
         }
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //check login
-        System.out.println("checking login");
         User user = (User) request.getSession().getAttribute("user");
-        if (user!= null){
-            System.out.println("test> onlinePlayer" + MainController.getOnlineUsers().get(0).getEmail());
-            System.out.println(user.getEmail());
+        if (user== null) response.sendRedirect("login.html");
+        else response.sendRedirect("homepage");
 
-        }else {
-            System.out.println("Test> user is null");
-        }
 
-        if (!MainController.getOnlineUsers().stream().anyMatch(u -> u.getEmail().equals(user.getEmail()))){
-            System.out.println(" you are offline");
-            request.getSession().setAttribute("loginError", "You have not logined in.");
-            response.sendRedirect("login.html");
-        }else{
-            System.out.println(" you are online");
-            response.sendRedirect("index.html");
-        }
+
 
     }
 }

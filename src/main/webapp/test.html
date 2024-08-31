@@ -4,109 +4,96 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Homepage</title>
-  <link rel="stylesheet" href="header.css"> <!-- 引入外部 CSS 文件 -->
+  <link rel="stylesheet" href="homePage.css"> <!-- Link to the external CSS file -->
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 0;
-      background-color: #f0f0f0;
-    }
-    .title {
-      margin-top: 20px;
-      font-size: 2em;
-      color: #333;
-    }
-    .container {
-      display: flex;
-      width: 80%;
-      max-width: 1000px;
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-top: 20px;
-    }
-    .left-panel, .right-panel {
-      padding: 20px;
-      width: 50%;
-    }
-    .left-panel {
-      background-color: #007bff;
-      color: white;
-    }
-    .right-panel {
-      background-color: #f8f9fa;
-      color: #333;
-      overflow-y: auto;
-    }
-    .btn-create-group {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #28a745;
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background-color 0.3s;
-    }
-    .btn-create-group:hover {
-      background-color: #218838;
-    }
-    .group-list {
+    /* 模态窗背景 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000; /* 使其置顶 */
     }
-    .group-list th, .group-list td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: left;
+
+    /* 模态窗内容 */
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 300px; /* 可以根据需要调整大小 */
+      z-index: 1001;
     }
-    .group-list th {
-      background-color: #007bff;
+
+    /* 关闭按钮 */
+    .close-btn {
+      background-color: red;
       color: white;
-      text-align: center; /* 居中文本 */
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      float: right;
     }
-    .group-list td {
-      text-align: center; /* 居中文本 */
-    }
-    .group-list td a {
-      text-decoration: none;
-      color: #007bff;
-      transition: color 0.3s;
-    }
-    .group-list td a:hover {
-      color: #0056b3;
+
+    /* 使用 :target 伪类显示模态窗 */
+    #modal:target {
+      display: block;
     }
   </style>
 </head>
 <body>
-<header>
-  <!-- Include your header content here -->
-</header>
-<h1 class="title">HOMEPAGE</h1>
 <div class="container">
   <div class="left-panel">
-    <h2>Create_New_Group</h2>
-    <a href="#" class="btn-create-group">创建小组</a>
+    <div class="header">
+      <h2>我的相册</h2>
+      <a href="#" class="btn-create-group">➕</a>
+
+      <a href="#modal" class="btn-upload-image">
+        <img src="uploadImage.png" alt="Upload Image">
+      </a>
+    </div>
+    <ul class="album-list">
+      wait for my albums
+    </ul>
   </div>
   <div class="right-panel">
-    <h2 style="text-align: center;">My_Group</h2>
-    <table class="group-list">
-      <thead>
-      <tr>
-        <th>Group ID</th>
-        <th>Title</th>
-      </tr>
-      </thead>
-      <tbody>
-     // wait for table
-      </tr>
-      </tbody>
-    </table>
+    <div class="header">
+      <h2>其他相册</h2>
+    </div>
+    <ul class="album-list">
+      wait for other albums
+    </ul>
   </div>
 </div>
+
+<!-- 模态窗结构 -->
+<div id="modal" class="modal-overlay">
+  <div class="modal-content">
+    <!-- 关闭按钮 -->
+    <a href="#" class="close-btn">关闭</a>
+    <!-- 上传照片表单 -->
+    <form method="POST" action="/Upload" enctype="multipart/form-data">
+      <!-- 标题输入 -->
+      <input type="text" name="title" placeholder="请输入标题" required style="display: block; margin-bottom: 10px;">
+
+      <!-- 描述输入 -->
+      <textarea name="description" placeholder="请输入描述" style="display: block; margin-bottom: 10px;"></textarea>
+
+      <!-- 文件输入 -->
+      <input type="file" name="file" required style="display: block; margin-bottom: 10px;">
+
+      <!-- 提交按钮 -->
+      <button type="submit">提交</button>
+    </form>
+  </div>
+</div>
+
 </body>
 </html>

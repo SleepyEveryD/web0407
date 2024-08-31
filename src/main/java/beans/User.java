@@ -4,38 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-
-    String name;
-    String surname;
+    int id;
+    String username;
     String email;
     String password;
-    List<Group> groupJoined = new ArrayList<>();
-    public User(String name, String surname, String email, String password) {
-        this.name = name;
-        this.surname = surname;
+
+    List<Album> albumsList = new ArrayList<>();
+    public User(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
     }
+
     public User() {
 
     }
 
 
-    public String getSurname() {
-        return surname;
+    public String getUsername() {
+        return username;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -54,11 +45,4 @@ public class User {
         this.password = password;
     }
 
-    public List<Group> getGroupJoined() {
-        return groupJoined;
-    }
-
-    public void setGroupJoined(List<Group> groupJoined) {
-        this.groupJoined = groupJoined;
-    }
 }

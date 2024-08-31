@@ -13,4 +13,7 @@ public class MainController {
     public static void addOnlineUser(User user) {
         onlineUsers.add(user);
     }
+    public static void removeOnlineUser(User user) {
+        onlineUsers.remove(user);
+    }
 }
