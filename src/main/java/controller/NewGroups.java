@@ -44,7 +44,7 @@ public class NewGroups extends HttpServlet {
         htmlBuilder.append("<strong>Duration:</strong> ").append(duration).append(" days<br>");
         // 在这里添加更多小组信息显示
         htmlBuilder.append("</div>");
-        htmlBuilder.append("<a href=\"home.html\">返回首页</a>");
+        htmlBuilder.append("<a href=\"home.html\">BACK TO HOME</a>");
         htmlBuilder.append("</div>");
         htmlBuilder.append("</body>");
         htmlBuilder.append("</html>");

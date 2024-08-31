@@ -77,44 +77,8 @@ public class Util {
             "</body>\n" +
             "</html>\n";
 
-    public static String selectMembersStatic ="<!DOCTYPE html>\n" +
-            "<html lang=\"zh-CN\">\n" +
-            "<head>\n" +
-            "  <meta charset=\"UTF-8\">\n" +
-            "  <title>选择成员</title>\n" +
-            "  <link rel=\"stylesheet\" href=\"createGroup.css\">\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "\n" +
-            "<div class=\"container\">\n" +
-            "  <h1>选择成员</h1>\n" +
-            "//wait for error" +
-            "  <form id=\"memberForm\" method=\"post\" action=\"createGroup\">\n" +
-            "<input type=\"hidden\" name=\"action\" value=\"selectMembers\">"+
-            "    <table>\n" +
-            "      <thead>\n" +
-            "      <tr>\n" +
-            "        <th>选择</th>\n" +
-            "        <th>姓</th>\n" +
-            "        <th>名</th>\n" +
-            "        <th>邮箱</th>\n" +
-            "      </tr>\n" +
-            "      </thead>\n" +
-            "      <tbody id=\"userTableBody\">\n" +
-            "      //wait for table\n" +
-            "      </tbody>\n" +
-            "    </table>\n" +
-            "    <div class=\"button-group\">\n" +
 
-            "      <button type=\"submit\" class=\"btn confirm-btn\">Confirm</button>\n" +
-            "      <a href=\"createGroup?action=close\"  class=\"btn close-btn\">Close</a>\n" +
-            "    </div>\n" +
-            "  </form>\n" +
-            "</div>\n" +
-            "\n" +
-            "</body>\n" +
-            "</html>\n";
-
+/*
 
     public static String readHTMLFile(String htmlFilePath) throws IOException {
         File htmlFile = new File(htmlFilePath);
