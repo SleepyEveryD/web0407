@@ -3,10 +3,7 @@ package dao;
 
 import beans.Photo;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +61,28 @@ public class PhotoDAO {
         return photos;
     }
 
+    public List<Photo> getAllPhotos(String username) throws SQLException {
+        List<Photo> photos = new ArrayList<>();
+        String query = "SELECT id, path, title, upload_date FROM immagini WHERE IDUser = ?"; // 添加 WHERE 子句来过滤结果
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            // 设置查询参数
+            ps.setString(1, username);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String path = rs.getString("path");
+                    String title = rs.getString("title");
+                    Date upload_date = rs.getDate("upload_date");
+                    photos.add(new Photo(id, path, title, upload_date)); // 假设你有一个 Photo 类
+                }
+            }
+        }
+        return photos;
+    }
+
+
     /**
      * used to get the photos related to a user which are not contained in the specified album
      * @param user_id user of reference
@@ -116,12 +135,11 @@ public class PhotoDAO {
      * @param title photo's title
      * @param description photo's description text
      * @param path photo's path
-     * @param user photo's uploader
      * @return code
      * @throws SQLException an error occurred
      */
     public int createPhoto(String title, String description, String path, String id_user) throws SQLException {
-        String query = "INSERT into photo (title, description, path, IDUser) VALUES(?, ?, ?, ?)";
+        String query = "INSERT into immagini (title, description, path, IDUser) VALUES(?, ?, ?, ?)";
         int code = 0;
         PreparedStatement pstatement = null;
         try {
@@ -145,32 +163,4 @@ public class PhotoDAO {
         return code;
     }
 
-    public int getLastInsertedId() throws SQLException {
-        String query = "SELECT MAX(ID) FROM photo"; // Assicurati che 'ID' sia il nome corretto della colonna ID nella tua tabella
-        int lastInsertedId = 0;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            statement = connection.prepareStatement(query);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                lastInsertedId = resultSet.getInt(1);
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Errore durante il recupero dell'ultimo ID inserito.", e);
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (Exception e) {
-                System.out.println("Errore durante la chiusura delle risorse del database.");
-            }
-        }
-        return lastInsertedId;
-    }
 }

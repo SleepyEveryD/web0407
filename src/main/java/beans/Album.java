@@ -27,6 +27,22 @@ public class Album {
         this.id_album = id_album;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Date getCreation_date() {
+        return creation_date;
+    }
+
+    public void setCreation_date(Date creation_date) {
+        this.creation_date = creation_date;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -34,13 +50,4 @@ public class Album {
     public void setUsername(String username) {
         this.username = username;
     }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public Date getCreationDate() { return creation_date; }
-    public void setCreationDate(Date creation_date) { this.creation_date = creation_date; }
-
-    public void setId_User(String username) { this.username = username; }
-
 }

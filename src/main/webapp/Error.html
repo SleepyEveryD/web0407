@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Error page</title>
+  <style>
+    /* 设置页面主体的 Flexbox 布局，并使内容水平和垂直居中 */
+    body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f8f9fa; /* 可选：设置背景颜色 */
+    }
+    /* 调整卡片宽度 */
+    .card {
+      width: 100%;
+      max-width: 1000px; /* 可选：设置卡片最大宽度 */
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header bg-danger text-white text-center main-text">
+    <i class="fas fa-exclamation-triangle"></i> <span>An error occurred</span>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Error description:</h5>
+    <p class="card-text" th:text="${errorMessage}">error text</p>
+    <!--  <a th:href="${LastPage}">Go back</a>-->
+    <a class="nav-link" aria-current="page" href="./homepage">Torna indietro</a>
+  </div>
+</div>
+</body>
+</html>

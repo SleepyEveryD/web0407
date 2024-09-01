@@ -37,13 +37,19 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
+        if (user!= null) {
+            response.sendRedirect("homepage");}
+
         WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
+
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         System.out.println( "email: " + email + " password: " + password);
         try {
             UserDAO userDAO = new UserDAO(DBConnection.getConnection(getServletContext()));
-            User user = userDAO.loginUser(email,password);
+            user = userDAO.loginUser(email,password);
             if (user==null) {
                 session.setAttribute("loginError", "Wrong email or password please check");
                 templateEngine.process("login.html", webContext, response.getWriter());

@@ -22,22 +22,7 @@ public class Util {
         return home_page.replace("wait for my albums", myAlbumsHtml.toString())
                 .replace("wait for other albums", otherAlbumsHtml.toString());
     }
-
-
-    private static String header ="<nav class=\"h-navbar\">\n" +
-            "    <div class=\"h-navbar-container h-container\">\n" +
-            "\n" +
-            "        <ul class=\"h-menu-items\">\n" +
-            "            <li><a href=\"index.html\">Home</a></li>\n" +
-            "            <li><a href=\"myActivity\">My activity</a></li>\n" +
-            "            <li><a href=\"createGroup\">New Activity</a></li>\n" +
-            "            <li><a href=\"logout\">Log Out </a></li>\n" +
-            "\n" +
-            "        </ul>\n" +
-            "        <h1 class=\"h-logo\">PA</h1>\n" +
-            "    </div>\n" +
-            "</nav>";
-    private static String home_page= "<!DOCTYPE html>\n" +
+    static String home_page = "<!DOCTYPE html>\n" +
             "<html lang=\"zh-CN\">\n" +
             "<head>\n" +
             "    <meta charset=\"UTF-8\">\n" +
@@ -67,7 +52,7 @@ public class Util {
             "            padding: 20px;\n" +
             "            border-radius: 8px;\n" +
             "            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);\n" +
-            "            width: 300px; /* 可以根据需要调整大小 */\n" +
+            "            width: 600px; /* 可以根据需要调整大小 */\n" +
             "            z-index: 1001;\n" +
             "        }\n" +
             "\n" +
@@ -79,11 +64,61 @@ public class Util {
             "            padding: 5px 10px;\n" +
             "            cursor: pointer;\n" +
             "            float: right;\n" +
+            "            text-decoration: none;\n" +
             "        }\n" +
             "\n" +
             "        /* 使用 :target 伪类显示模态窗 */\n" +
-            "        #modal:target {\n" +
+            "        #album-modal:target {\n" +
             "            display: block;\n" +
+            "        }\n" +
+            "\n" +
+            "        /* 照片选择区域 */\n" +
+            "        .photo-selection {\n" +
+            "            display: flex;\n" +
+            "            flex-wrap: wrap;\n" +
+            "            gap: 10px;\n" +
+            "        }\n" +
+            "\n" +
+            "        .photo-item {\n" +
+            "            flex: 1 1 calc(33.333% - 10px); /* 一行三个 */\n" +
+            "            box-sizing: border-box;\n" +
+            "            margin-bottom: 10px;\n" +
+            "            position: relative;\n" +
+            "        }\n" +
+            "\n" +
+            "        .photo-item img {\n" +
+            "            width: 100%;\n" +
+            "            height: auto;\n" +
+            "            object-fit: cover;\n" +
+            "            border: 1px solid #ddd;\n" +
+            "            border-radius: 4px;\n" +
+            "        }\n" +
+            "\n" +
+            "        .photo-item input {\n" +
+            "            position: absolute;\n" +
+            "            bottom: 10px;\n" +
+            "            left: 10px;\n" +
+            "            background: rgba(255, 255, 255, 0.7);\n" +
+            "            border: none;\n" +
+            "            padding: 5px;\n" +
+            "            cursor: pointer;\n" +
+            "        }\n" +
+            "\n" +
+            "        /* 额外样式 */\n" +
+            "        .form-group {\n" +
+            "            margin-bottom: 15px;\n" +
+            "        }\n" +
+            "\n" +
+            "        .form-group label {\n" +
+            "            display: block;\n" +
+            "            margin-bottom: 5px;\n" +
+            "        }\n" +
+            "\n" +
+            "        .form-group input,\n" +
+            "        .form-group textarea {\n" +
+            "            width: 100%;\n" +
+            "            padding: 8px;\n" +
+            "            box-sizing: border-box;\n" +
             "        }\n" +
             "    </style>\n" +
             "</head>\n" +
@@ -93,7 +128,7 @@ public class Util {
             "    <div class=\"left-panel\">\n" +
             "        <div class=\"header\">\n" +
             "            <h2>我的相册</h2>\n" +
-            "            <a href=\"#\" class=\"btn-create-group\">➕</a>\n" +
+            "            <a href=\"#album-modal\" class=\"btn-create-group\">➕</a>\n" +
             "\n" +
             "            <a href=\"#modal\" class=\"btn-upload-image\">\n" +
             "                <img src=\"uploadImage.png\" alt=\"Upload Image\">\n" +
@@ -113,13 +148,50 @@ public class Util {
             "    </div>\n" +
             "</div>\n" +
             "\n" +
-            "<!-- 模态窗结构 -->\n" +
+            "<!-- 增加专辑模态窗结构 -->\n" +
+            "<div id=\"album-modal\" class=\"modal-overlay\">\n" +
+            "    <div class=\"modal-content\">\n" +
+            "        <!-- 关闭按钮 -->\n" +
+            "        <a href=\"#\" class=\"close-btn\">关闭</a>\n" +
+            "        <!-- 增加专辑表单 -->\n" +
+            "        <form method=\"POST\" action=\"/CreateAlbum\" enctype=\"multipart/form-data\">\n" +
+            "            <!-- 标题输入 -->\n" +
+            "            <div class=\"form-group\">\n" +
+            "                <label for=\"album-title\">专辑标题</label>\n" +
+            "                <input type=\"text\" id=\"album-title\" name=\"title\" placeholder=\"请输入专辑标题\" required>\n" +
+            "            </div>\n" +
+            "\n" +
+            "            <!-- 描述输入 -->\n" +
+            "            <div class=\"form-group\">\n" +
+            "                <label for=\"album-description\">专辑描述</label>\n" +
+            "                <textarea id=\"album-description\" name=\"description\" placeholder=\"请输入专辑描述\" required></textarea>\n" +
+            "            </div>\n" +
+            "\n" +
+            "            <!-- 选择图片 -->\n" +
+            "            <div class=\"form-group\">\n" +
+            "                <label for=\"album-images\">选择图片</label>\n" +
+            "                <div class=\"photo-selection\">\n" +
+            "                    <!-- 通过 Thymeleaf 动态生成照片项 -->\n" +
+            "                    <div th:each=\"photo : ${photos}\" class=\"photo-item\">\n" +
+            "                        <img th:src=\"@{${photo.url}}\" alt=\"Photo\" />\n" +
+            "                        <input type=\"checkbox\" name=\"selectedPhotos\" th:value=\"${photo.id}\"> 选择\n" +
+            "                    </div>\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "\n" +
+            "            <!-- 提交按钮 -->\n" +
+            "            <button type=\"submit\">创建专辑</button>\n" +
+            "        </form>\n" +
+            "    </div>\n" +
+            "</div>\n" +
+            "\n" +
+            "<!-- 上传照片模态窗结构 -->\n" +
             "<div id=\"modal\" class=\"modal-overlay\">\n" +
             "    <div class=\"modal-content\">\n" +
             "        <!-- 关闭按钮 -->\n" +
             "        <a href=\"#\" class=\"close-btn\">关闭</a>\n" +
             "        <!-- 上传照片表单 -->\n" +
-            "        <form method=\"POST\" action=\"./Upload\" enctype=\"multipart/form-data\">\n" +
+            "        <form method=\"POST\" action=\"/Upload\" enctype=\"multipart/form-data\">\n" +
             "            <!-- 标题输入 -->\n" +
             "            <input type=\"text\" name=\"title\" placeholder=\"请输入标题\" required style=\"display: block; margin-bottom: 10px;\">\n" +
             "\n" +
@@ -132,19 +204,20 @@ public class Util {
             "            <!-- 提交按钮 -->\n" +
             "            <button type=\"submit\">提交</button>\n" +
             "        </form>\n" +
-            "\n" +
             "    </div>\n" +
-            "</div>\n" +
             "</div>\n" +
             "\n" +
             "</body>\n" +
-            "</html>\n";
+            "</html>\n" ;
 
 
 /*
 
     public static String readHTMLFile(String htmlFilePath) throws IOException {
-        File htmlFile = new File(htmlFilePath);
+        File htmlFile <!DOCTYPE html>
+
+
+            = new File(htmlFilePath);
         BufferedReader reader = new BufferedReader(new FileReader(htmlFile));
 
         StringBuilder stringBuilder = new StringBuilder();

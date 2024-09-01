@@ -1,3 +1,4 @@
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -109,7 +110,8 @@ body {
     color: inherit;
     text-decoration: none;
     display: block; /* Ensure the link takes the full width of the list item */
-}/* 其他样式保持不变 */
+}
+
 /* 隐藏checkbox */
 #modalToggle {
     display: none;
@@ -124,7 +126,7 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000; /* 置于顶层 */
+    z-index: 1000; /* 使其置顶 */
 }
 
 /* 模态窗内容 */
@@ -137,13 +139,8 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px; /* 可根据需要调整大小 */
+    width: 600px; /* 可以根据需要调整大小 */
     z-index: 1001;
-}
-
-/* 当checkbox被选中时显示模态窗 */
-#modalToggle:checked ~ .modal-overlay {
-    display: block;
 }
 
 /* 关闭按钮 */
@@ -154,4 +151,71 @@ body {
     padding: 5px 10px;
     cursor: pointer;
     float: right;
+    text-decoration: none;
+}
+
+/* 使用 :target 伪类显示模态窗 */
+#album-modal:target,
+#modal:target {
+    display: block;
+}
+
+/* 照片选择区域 */
+.photo-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.photo-item {
+    flex: 1 1 calc(33.333% - 10px); /* 一行三个 */
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.photo-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.photo-item input {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* 额外样式 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+/* 相册列表项样式 */
+.album-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.album-item span {
+    margin-right: 20px;
 }

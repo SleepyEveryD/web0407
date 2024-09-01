@@ -3,50 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Image Gallery</title>
     <link rel="stylesheet" href="homePage.css"> <!-- Link to the external CSS file -->
-    <style>
-        /* 模态窗背景 */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000; /* 使其置顶 */
-        }
-
-        /* 模态窗内容 */
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px; /* 可以根据需要调整大小 */
-            z-index: 1001;
-        }
-
-        /* 关闭按钮 */
-        .close-btn {
-            background-color: red;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            float: right;
-        }
-
-        /* 使用 :target 伪类显示模态窗 */
-        #modal:target {
-            display: block;
-        }
-    </style>
 </head>
 <body>
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
@@ -54,14 +12,19 @@
     <div class="left-panel">
         <div class="header">
             <h2>我的相册</h2>
-            <a href="#" class="btn-create-group">➕</a>
-
+            <a href="#album-modal" class="btn-create-group">➕</a>
             <a href="#modal" class="btn-upload-image">
                 <img src="uploadImage.png" alt="Upload Image">
             </a>
         </div>
         <ul class="album-list">
-            wait for my albums
+            <!-- 使用 Thymeleaf 显示用户的相册列表 -->
+            <li th:each="album : ${myalbumList}" class="album-item">
+                <span th:text="${album.id_album}"></span>
+                <span th:text="${album.title}"></span>
+                <span th:text="${#dates.format(album.creation_date, 'yyyy-MM-dd')}"></span>
+                <a th:href="@{/album/{id}(id=${album.id_album})}">查看</a>
+            </li>
         </ul>
     </div>
     <div class="right-panel">
@@ -69,17 +32,63 @@
             <h2>其他相册</h2>
         </div>
         <ul class="album-list">
-            wait for other albums
+            <!-- 使用 Thymeleaf 显示其他相册列表 -->
+            <li th:each="album : ${otherAlbumList}" class="album-item">
+                <span th:text="${album.id_album}"></span>
+                <span th:text="${album.title}"></span>
+                <span th:text="${#dates.format(album.creation_date, 'yyyy-MM-dd')}"></span>
+                <a th:href="@{/album/{id}(id=${album.id_album})}">查看</a>
+            </li>
         </ul>
     </div>
 </div>
 
-<!-- 模态窗结构 -->
+<!-- 增加专辑模态窗结构 -->
+<div id="album-modal" class="modal-overlay">
+    <div class="modal-content">
+        <!-- 关闭按钮 -->
+        <a href="#" class="close-btn">关闭</a>
+        <!-- 增加专辑表单 -->
+        <form method="POST" action="/CreateAlbum" enctype="multipart/form-data">
+            <!-- 标题输入 -->
+            <div class="form-group">
+                <label for="album-title">专辑标题</label>
+                <input type="text" id="album-title" name="title" placeholder="请输入专辑标题" required>
+            </div>
+
+            <!-- 描述输入 -->
+            <div class="form-group">
+                <label for="album-description">专辑描述</label>
+                <textarea id="album-description" name="description" rows="4" placeholder="请输入专辑描述"></textarea>
+            </div>
+
+            <!-- 选择图片 -->
+            <div class="form-group">
+                <label for="album-images">选择图片</label>
+                <div class="photo-selection">
+                    <!-- 通过 Thymeleaf 动态生成照片项 -->
+                    <div th:each="photo : ${photos}" class="photo-item">
+                        <div class="photo-info">
+                            <p class="photo-title" th:text="${photo.title}">标题</p>
+                            <p class="photo-date" th:text="${#dates.format(photo.uploadDate, 'yyyy-MM-dd')}">上传时间</p>
+                            <input type="checkbox" name="selectedPhotos" th:value="${photo.id}"> 选择
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 提交按钮 -->
+            <button type="submit">创建专辑</button>
+        </form>
+    </div>
+</div>
+
+<!-- 上传图片模态窗结构 -->
 <div id="modal" class="modal-overlay">
     <div class="modal-content">
         <!-- 关闭按钮 -->
         <a href="#" class="close-btn">关闭</a>
-        <!-- 上传照片表单 -->
+        <!-- 上传图片表单 -->
         <form method="POST" action="/Upload" enctype="multipart/form-data">
             <!-- 标题输入 -->
             <input type="text" name="title" placeholder="请输入标题" required style="display: block; margin-bottom: 10px;">
@@ -93,9 +102,7 @@
             <!-- 提交按钮 -->
             <button type="submit">提交</button>
         </form>
-
     </div>
-</div>
 </div>
 
 </body>

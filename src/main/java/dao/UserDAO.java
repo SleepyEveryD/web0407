@@ -162,7 +162,7 @@ public class UserDAO extends HttpServlet {
 
 
     public User loginUser(String email, String password) throws SQLException {
-        String query = "SELECT password FROM `user` Where email=? ";
+        String query = "SELECT password, username FROM `user` Where email=? ";
         User loginUser = new User();
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             // fill the first and second parameter
@@ -172,10 +172,12 @@ public class UserDAO extends HttpServlet {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
+                    String username = resultSet.getString("username");
                     String storedHashedPassword = resultSet.getString("password");
+
                     if (verifyPassword(password, storedHashedPassword)) {
                         loginUser.setEmail(email);
-                        loginUser.setUsername(email);
+                        loginUser.setUsername(username);
                         return loginUser;
                     }
                 }

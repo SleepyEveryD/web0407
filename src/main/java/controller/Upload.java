@@ -57,7 +57,7 @@ public class Upload extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("000000000000");
+
         PhotoDAO photo_dao = new PhotoDAO(connection);
 
         // 获取 WEB-INF/classes 目录的绝对路径
@@ -70,27 +70,26 @@ public class Upload extends HttpServlet {
         if (!uploadFolder.exists()) {
             uploadFolder.mkdirs();
         }
-        System.out.println("1111111111111");
 
         Part part = request.getPart("file");
         User user = (User) request.getSession().getAttribute("user");
         String username = user.getUsername();
         String title = request.getParameter("title").trim();
         String description = request.getParameter("description");
-        System.out.println("222222222222");
+
         // 初步参数验证
-        if (title == null || title.isEmpty()||title.length()>256|| true) {
-            forwardError(request, response, "Please enter a title");
+        if (title == null || title.isEmpty()|| title.trim().isEmpty()||title.length()>256) {
+            forwardError(request, response, "Please enter a title, this title should be less than 256 characters and can not be empty");
             return;
         }
         if (description == null) {
             description = "No description";
         }
-        /*
+
         // 获取文件名和扩展名
         String fileName = part.getSubmittedFileName();
         String extension = fileName.substring(fileName.lastIndexOf('.'));
-        System.out.println("BKKkkkkkkkkkkkkkkkkkkkkkkk");
+
         // 仅允许上传 JPEG 和 PNG 文件
         if (!extension.equalsIgnoreCase(".jpg") && !extension.equalsIgnoreCase(".jpeg") && !extension.equalsIgnoreCase(".png")) {
             forwardError(request, response, "Wrong filetype");
@@ -117,6 +116,8 @@ public class Upload extends HttpServlet {
 
             // 保存文件到磁盘
             part.write(path);
+            System.out.println(" File saved!");
+            System.out.println( "title " + title + " description " + description + " relativePath " + relativePath + " username " + username);
 
             // 保存文件信息到数据库
             photo_dao.createPhoto(title, description, relativePath, username);
@@ -131,6 +132,7 @@ public class Upload extends HttpServlet {
                 File file = new File(path);
                 if (file.exists()) {
                     file.delete();
+                    System.out.println(" File deleted!");
                 }
             }
             try {
@@ -150,17 +152,16 @@ public class Upload extends HttpServlet {
             }
         }
 
-         */
+
 
         // 文件上传成功后的响应
         response.setStatus(HttpServletResponse.SC_OK);
-        response.sendRedirect("./ShowHome");
+        response.sendRedirect("homepage");
     }
 
     private void forwardError(HttpServletRequest request, HttpServletResponse response, String errorMessage) throws ServletException, IOException {
         request.setAttribute("errorMessage", errorMessage);
-        request.getRequestDispatcher("/homepage").forward(request, response);
-        System.out.println("jjjjjj");
+        forward(request, response, "/Error.html");
     }
 
 
@@ -181,5 +182,6 @@ public class Upload extends HttpServlet {
         templateEngine.process(path, ctx, response.getWriter());
 
     }
+
 
 }
