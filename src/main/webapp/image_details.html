@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<htm<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Details</title>
+  <style>
+    .details img {
+      width: 800px;
+      height: auto;
+      display: block;
+      margin: 20px auto;
+    }
+    .details p {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
+  <script>
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function loadImageDetails() {
+      const imageId = getQueryParam('id');
+      // 根据 ID 显示图片和描述
+      const images = {
+        '1': { src: 'images/example1.jpg', description: 'Description of image 1' },
+        '2': { src: 'images/example2.jpg', description: 'Description of image 2' }
+      };
+
+      const image = images[imageId];
+      if (image) {
+        document.getElementById('image').src = image.src;
+        document.getElementById('description').textContent = image.description;
+      } else {
+        document.getElementById('image').src = '';
+        document.getElementById('description').textContent = 'Image not found';
+      }
+    }
+
+    window.onload = loadImageDetails;
+  </script>
+</head>
+<body>
+<h1>Image Details</h1>
+<div class="details">
+  <img id="image" src="" alt="Image">
+  <p id="description"></p>
+  <a href="index.html">Back to Gallery</a>
+</div>
+</body>
+</html>

@@ -5,7 +5,6 @@ public class Album {
     private int id_album;
     private String title;
     private Date creation_date;
-
     private String username;
 
     public Album(int id_album, String title, Date creation_date, String username) {
