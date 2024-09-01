@@ -92,6 +92,8 @@
       <!-- 提交按钮 -->
       <button type="submit">提交</button>
     </form>
+    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
+  </div>
   </div>
 </div>
 

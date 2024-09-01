@@ -3,7 +3,7 @@ package controller;
 import beans.Album;
 import beans.User;
 import dao.AlbumDAO;
-import utils.ConnectionHandler;
+import utils.DBConnection;
 import utils.Util;
 
 import javax.servlet.ServletException;
@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/homepage")
@@ -37,7 +36,7 @@ public class Home_Page extends HttpServlet {
         List<Album> myalbumList=null;
         List<Album> otherAlbumList=null;
         try {
-            AlbumDAO albumDAO = new AlbumDAO(ConnectionHandler.getConnection(getServletContext()));
+            AlbumDAO albumDAO = new AlbumDAO(DBConnection.getConnection(getServletContext()));
             try {
                 myalbumList = albumDAO.getAlbumByUser(username);
                 otherAlbumList = albumDAO.getAlbumNotByUser(username);

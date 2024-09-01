@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.example</groupId>
-  <artifactId>web01.07</artifactId>
+  <artifactId>07</artifactId>
   <packaging>war</packaging>
   <properties>
     <maven.compiler.source>21</maven.compiler.source>

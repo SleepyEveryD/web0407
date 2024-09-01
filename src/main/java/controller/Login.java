@@ -6,31 +6,19 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import beans.User;
 import dao.UserDAO;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import utils.ConnectionHandler;
+import utils.DBConnection;
 
 
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 
 @WebServlet("/login")
@@ -54,7 +42,7 @@ public class Login extends HttpServlet {
         String password = request.getParameter("password");
         System.out.println( "email: " + email + " password: " + password);
         try {
-            UserDAO userDAO = new UserDAO(ConnectionHandler.getConnection(getServletContext()));
+            UserDAO userDAO = new UserDAO(DBConnection.getConnection(getServletContext()));
             User user = userDAO.loginUser(email,password);
             if (user==null) {
                 session.setAttribute("loginError", "Wrong email or password please check");

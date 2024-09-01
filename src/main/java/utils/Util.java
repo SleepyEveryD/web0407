@@ -44,22 +44,60 @@ public class Util {
             "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
             "    <title>Homepage</title>\n" +
             "    <link rel=\"stylesheet\" href=\"homePage.css\"> <!-- Link to the external CSS file -->\n" +
+            "    <style>\n" +
+            "        /* 模态窗背景 */\n" +
+            "        .modal-overlay {\n" +
+            "            display: none;\n" +
+            "            position: fixed;\n" +
+            "            top: 0;\n" +
+            "            left: 0;\n" +
+            "            width: 100%;\n" +
+            "            height: 100%;\n" +
+            "            background-color: rgba(0, 0, 0, 0.5);\n" +
+            "            z-index: 1000; /* 使其置顶 */\n" +
+            "        }\n" +
+            "\n" +
+            "        /* 模态窗内容 */\n" +
+            "        .modal-content {\n" +
+            "            position: absolute;\n" +
+            "            top: 50%;\n" +
+            "            left: 50%;\n" +
+            "            transform: translate(-50%, -50%);\n" +
+            "            background-color: white;\n" +
+            "            padding: 20px;\n" +
+            "            border-radius: 8px;\n" +
+            "            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);\n" +
+            "            width: 300px; /* 可以根据需要调整大小 */\n" +
+            "            z-index: 1001;\n" +
+            "        }\n" +
+            "\n" +
+            "        /* 关闭按钮 */\n" +
+            "        .close-btn {\n" +
+            "            background-color: red;\n" +
+            "            color: white;\n" +
+            "            border: none;\n" +
+            "            padding: 5px 10px;\n" +
+            "            cursor: pointer;\n" +
+            "            float: right;\n" +
+            "        }\n" +
+            "\n" +
+            "        /* 使用 :target 伪类显示模态窗 */\n" +
+            "        #modal:target {\n" +
+            "            display: block;\n" +
+            "        }\n" +
+            "    </style>\n" +
             "</head>\n" +
             "<body>\n" +
+            "<p th:if=\"${errorMessage}\" th:text=\"${errorMessage}\" style=\"color: red;\"></p>\n" +
             "<div class=\"container\">\n" +
             "    <div class=\"left-panel\">\n" +
             "        <div class=\"header\">\n" +
             "            <h2>我的相册</h2>\n" +
             "            <a href=\"#\" class=\"btn-create-group\">➕</a>\n" +
-            "            <!-- Form for file upload -->\n" +
-            "            <form method=\"POST\" action=\"/upload\" enctype=\"multipart/form-data\" style=\"display: inline-block;\">\n" +
-            "                <!-- File input button -->\n" +
-            "                <label for=\"fileInput\" class=\"btn-upload-image\" style=\"cursor: pointer;\">\n" +
-            "                    <img src=\"uploadImage.png\" alt=\"Upload Image\">\n" +
-            "                </label>\n" +
-            "                <!-- Hidden file input -->\n" +
-            "                <input type=\"file\" id=\"fileInput\" name=\"file\" style=\"display: none;\" required onchange=\"this.form.submit()\">\n" +
-            "            </form>\n" +
+            "\n" +
+            "            <a href=\"#modal\" class=\"btn-upload-image\">\n" +
+            "                <img src=\"uploadImage.png\" alt=\"Upload Image\">\n" +
+            "            </a>\n" +
             "        </div>\n" +
             "        <ul class=\"album-list\">\n" +
             "            wait for my albums\n" +
@@ -74,6 +112,31 @@ public class Util {
             "        </ul>\n" +
             "    </div>\n" +
             "</div>\n" +
+            "\n" +
+            "<!-- 模态窗结构 -->\n" +
+            "<div id=\"modal\" class=\"modal-overlay\">\n" +
+            "    <div class=\"modal-content\">\n" +
+            "        <!-- 关闭按钮 -->\n" +
+            "        <a href=\"#\" class=\"close-btn\">关闭</a>\n" +
+            "        <!-- 上传照片表单 -->\n" +
+            "        <form method=\"POST\" action=\"./Upload\" enctype=\"multipart/form-data\">\n" +
+            "            <!-- 标题输入 -->\n" +
+            "            <input type=\"text\" name=\"title\" placeholder=\"请输入标题\" required style=\"display: block; margin-bottom: 10px;\">\n" +
+            "\n" +
+            "            <!-- 描述输入 -->\n" +
+            "            <textarea name=\"description\" placeholder=\"请输入描述\" style=\"display: block; margin-bottom: 10px;\"></textarea>\n" +
+            "\n" +
+            "            <!-- 文件输入 -->\n" +
+            "            <input type=\"file\" name=\"file\" required style=\"display: block; margin-bottom: 10px;\">\n" +
+            "\n" +
+            "            <!-- 提交按钮 -->\n" +
+            "            <button type=\"submit\">提交</button>\n" +
+            "        </form>\n" +
+            "\n" +
+            "    </div>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "\n" +
             "</body>\n" +
             "</html>\n";
 

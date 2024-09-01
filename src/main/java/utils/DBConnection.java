@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConnectionHandler {
+public class DBConnection {
 
     public static Connection getConnection(ServletContext context) throws IllegalAccessException {
         Connection connection = null;

@@ -12,6 +12,9 @@ import java.util.List;
 
 public class PhotoDAO {
     private Connection connection;
+    public PhotoDAO(Connection connection) {
+        this.connection = connection;
+    }
 
 
 

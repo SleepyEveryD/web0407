@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.*;
 
-class ConnectionHandlerTest {
+class DBConnectionTest {
     @Test
     public  void userTableTest() {
         final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";

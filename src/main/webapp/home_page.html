@@ -41,17 +41,23 @@
             cursor: pointer;
             float: right;
         }
+
+        /* 使用 :target 伪类显示模态窗 */
+        #modal:target {
+            display: block;
+        }
     </style>
 </head>
 <body>
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
 <div class="container">
     <div class="left-panel">
         <div class="header">
             <h2>我的相册</h2>
             <a href="#" class="btn-create-group">➕</a>
-            <!-- 点击此按钮显示上传模态窗 -->
-            <a href="#" class="btn-upload-image" style="cursor: pointer;" onclick="document.getElementById('modal').style.display='block'; return false;">
-                上传照片
+
+            <a href="#modal" class="btn-upload-image">
+                <img src="uploadImage.png" alt="Upload Image">
             </a>
         </div>
         <ul class="album-list">
@@ -72,7 +78,7 @@
 <div id="modal" class="modal-overlay">
     <div class="modal-content">
         <!-- 关闭按钮 -->
-        <button class="close-btn" onclick="document.getElementById('modal').style.display='none';">关闭</button>
+        <a href="#" class="close-btn">关闭</a>
         <!-- 上传照片表单 -->
         <form method="POST" action="/Upload" enctype="multipart/form-data">
             <!-- 标题输入 -->
@@ -87,7 +93,9 @@
             <!-- 提交按钮 -->
             <button type="submit">提交</button>
         </form>
+
     </div>
+</div>
 </div>
 
 </body>
