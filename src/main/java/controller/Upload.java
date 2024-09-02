@@ -57,16 +57,14 @@ public class Upload extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PhotoDAO photoDAO = new PhotoDAO(connection);
 
-        PhotoDAO photo_dao = new PhotoDAO(connection);
-
-        // 获取 WEB-INF/classes 目录的绝对路径
-        String classesPath = getServletContext().getRealPath("/WEB-INF/classes");
-        // 构建 resources 子目录路径
-        String uploadFilePath = Paths.get(classesPath, "resources").toString();
+        // 获取 webapp/images 目录的绝对路径
+        String imagesPath = getServletContext().getRealPath("/images");
+        System.out.println(imagesPath);
 
         // 创建上传文件夹，如果不存在
-        File uploadFolder = new File(uploadFilePath);
+        File uploadFolder = new File(imagesPath);
         if (!uploadFolder.exists()) {
             uploadFolder.mkdirs();
         }
@@ -78,8 +76,8 @@ public class Upload extends HttpServlet {
         String description = request.getParameter("description");
 
         // 初步参数验证
-        if (title == null || title.isEmpty()|| title.trim().isEmpty()||title.length()>256) {
-            forwardError(request, response, "Please enter a title, this title should be less than 256 characters and can not be empty");
+        if (title == null || title.isEmpty() || title.trim().isEmpty() || title.length() > 256) {
+            forwardError(request, response, "Please enter a title, this title should be less than 256 characters and cannot be empty");
             return;
         }
         if (description == null) {
@@ -96,31 +94,27 @@ public class Upload extends HttpServlet {
             return;
         }
 
-        String path = null;
+        String filePath = null;
         try {
             // 开启事务
             connection.setAutoCommit(false);
 
-            // 使用 UUID 生成随机文件名并转为乱码
+            // 使用 UUID 生成随机文件名
             String randomFileName = UUID.randomUUID().toString();
-            byte[] bytes = randomFileName.getBytes(StandardCharsets.UTF_8);
-            String encodedFileName = new String(bytes, StandardCharsets.ISO_8859_1);  // 使用 ISO_8859_1 编码模拟乱码
-
-            String newFileName = encodedFileName + extension;
+            String newFileName = randomFileName + extension;
             File file = new File(uploadFolder, newFileName);
 
-            path = file.getPath();
-
-            // 获取相对于 classes 的相对路径
-            String relativePath = Paths.get(classesPath).relativize(Paths.get(path)).toString();
+            filePath = file.getPath();
 
             // 保存文件到磁盘
-            part.write(path);
-            System.out.println(" File saved!");
-            System.out.println( "title " + title + " description " + description + " relativePath " + relativePath + " username " + username);
+            part.write(filePath);
+            System.out.println("File saved!");
+            System.out.println("Title: " + title + " Description: " + description + " FilePath: " + filePath + " Username: " + username);
 
             // 保存文件信息到数据库
-            photo_dao.createPhoto(title, description, relativePath, username);
+            // 生成相对路径以供数据库存储
+            String relativePath = "images/" + newFileName;
+            photoDAO.createPhoto(title, description, relativePath, username);
 
             // 提交事务
             connection.commit();
@@ -128,11 +122,11 @@ public class Upload extends HttpServlet {
         } catch (IOException | SQLException e) {
             e.printStackTrace();
             // 如果 SQL 出错，删除已写入的文件
-            if (path != null) {
-                File file = new File(path);
+            if (filePath != null) {
+                File file = new File(filePath);
                 if (file.exists()) {
                     file.delete();
-                    System.out.println(" File deleted!");
+                    System.out.println("File deleted!");
                 }
             }
             try {
@@ -151,8 +145,6 @@ public class Upload extends HttpServlet {
                 e.printStackTrace();
             }
         }
-
-
 
         // 文件上传成功后的响应
         response.setStatus(HttpServletResponse.SC_OK);

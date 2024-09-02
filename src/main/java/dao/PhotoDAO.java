@@ -22,22 +22,33 @@ public class PhotoDAO {
      * @return list of selected photos
      * @throws SQLException an error occurred
      */
+
     public List<Photo> getPhotosByAlbum(int album_id, int start) throws SQLException {
         List<Photo> photos = new ArrayList<>();
-        String query = "SELECT Photo.ID AS IDPhoto, title, upload_date, path FROM albumcontain JOIN photo ON albumcontain.IDPhoto = Photo.ID WHERE IDAlbum = ? ORDER BY upload_date DESC LIMIT ?, 5";
+        String query = "SELECT i.ID AS photo_id, i.title AS photo_title, i.upload_date AS photo_upload_date, " +
+                "i.description AS photo_description, i.IDUser AS photo_user, i.path AS photo_path " +
+                "FROM album_photo ap " +
+                "JOIN immagini i ON ap.photo_id = i.ID " +
+                "WHERE ap.album_id = ? " +
+                "ORDER BY i.upload_date DESC " +
+                "LIMIT ?, 5"; // 修正 LIMIT 子句
+
         ResultSet result = null;
         PreparedStatement pstatement = null;
         try {
             pstatement = connection.prepareStatement(query);
             pstatement.setInt(1, album_id);
-            pstatement.setInt(2, start);
+            pstatement.setInt(2, start-1); // 设置 LIMIT 的 offset
             result = pstatement.executeQuery();
+
             while (result.next()) {
                 Photo photo = new Photo();
-                photo.setId_Image(result.getInt("IDPhoto"));
-                photo.setTitle(result.getString("title"));
-                photo.setUploadDate(result.getDate("upload_date"));
-                photo.setPath(result.getString("path"));
+                photo.setId_image(result.getInt("photo_id")); // 使用正确的列名
+                photo.setTitle(result.getString("photo_title")); // 使用正确的列名
+                photo.setUploadDate(result.getDate("photo_upload_date")); // 使用正确的列名
+                photo.setPath(result.getString("photo_path")); // 使用正确的列名
+                photo.setId_user(result.getString("photo_user")); // 使用正确的列名和数据类型
+
                 photos.add(photo);
             }
         } catch (SQLException e) {
@@ -60,6 +71,108 @@ public class PhotoDAO {
         }
         return photos;
     }
+
+    public int getTotalPageCountByAlbum(int albumId) throws SQLException {
+
+        int totalCount = 0;
+        int photosPerPage = 5;  // 每页的照片数量
+        String query = "SELECT COUNT(DISTINCT i.ID) AS total_count " +
+                "FROM album_photo ap " +
+                "JOIN immagini i ON ap.photo_id = i.ID " +
+                "WHERE ap.album_id = ?";
+        ResultSet result = null;
+        PreparedStatement pstatement = null;
+
+        try {
+            // 创建 PreparedStatement 对象
+            pstatement = connection.prepareStatement(query);
+            pstatement.setInt(1, albumId);
+
+            // 执行查询
+            result = pstatement.executeQuery();
+
+            // 获取总照片数
+            if (result.next()) {
+                totalCount = result.getInt("total_count");
+            }
+
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        } finally {
+            // 关闭 ResultSet
+            try {
+                if (result != null) {
+                    result.close();
+                }
+            } catch (Exception e1) {
+                throw new SQLException(e1);
+            }
+
+            // 关闭 PreparedStatement
+            try {
+                if (pstatement != null) {
+                    pstatement.close();
+                }
+            } catch (Exception e2) {
+                throw new SQLException(e2);
+            }
+        }
+
+        // 计算总页数
+        int totalPageCount = (int) Math.ceil((double) totalCount / photosPerPage);
+        return totalPageCount;
+    }
+
+    /**
+     * Retrieves the details of a specific photo by its ID.
+     * @param photoId the ID of the photo.
+     * @return the photo details.
+     * @throws SQLException if an SQL error occurs.
+     */
+    public Photo getPhotoById(int photoId) throws SQLException {
+        Photo photo = null;
+        String query = "SELECT ID, title, description, path, upload_date, IDUser " +
+                "FROM immagini " +
+                "WHERE ID = ?";
+        ResultSet result = null;
+        PreparedStatement pstatement = null;
+
+        try {
+            pstatement = connection.prepareStatement(query);
+            pstatement.setInt(1, photoId);
+            result = pstatement.executeQuery();
+
+            if (result.next()) {
+
+                photo = new Photo();
+                photo.setId_image(result.getInt("ID"));
+                photo.setTitle(result.getString("title"));
+                photo.setDescritpion(result.getString("description"));
+                photo.setPath(result.getString("path"));
+                photo.setUploadDate(result.getDate("upload_date"));
+                photo.setId_user(result.getString("IDUser"));
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+            } catch (Exception e1) {
+                throw new SQLException(e1);
+            }
+            try {
+                if (pstatement != null) {
+                    pstatement.close();
+                }
+            } catch (Exception e2) {
+                throw new SQLException(e2);
+            }
+        }
+        return photo;
+    }
+
 
     public List<Photo> getAllPhotos(String username) throws SQLException {
         List<Photo> photos = new ArrayList<>();
@@ -105,7 +218,7 @@ public class PhotoDAO {
             result = pstatement.executeQuery();
             while (result.next()) {
                 Photo photo = new Photo();
-                photo.setId_Image(result.getInt("ID"));
+                photo.setId_image(result.getInt("ID"));
                 photo.setTitle(result.getString("title"));
                 photos.add(photo);
             }
@@ -162,5 +275,6 @@ public class PhotoDAO {
         }
         return code;
     }
+
 
 }

@@ -7,6 +7,8 @@ public class Album {
     private Date creation_date;
     private String username;
 
+
+
     public Album(int id_album, String title, Date creation_date, String username) {
         this.id_album = id_album;
         this.title = title;

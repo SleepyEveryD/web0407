@@ -1,90 +1,185 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Align to the top */
     height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
 }
 
 .container {
-    background-color: #fff;
+    display: flex;
+    width: 80%;
+    max-width: 1000px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px; /* Space between container and forms */
+}
+
+.left-panel, .right-panel {
+    padding: 20px;
+    width: 50%;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width */
+}
+
+.left-panel {
+    background-color: #f0f0f0; /* Light gray background */
+    color: #333; /* Dark gray text */
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ddd; /* Border to separate panels */
+}
+
+.right-panel {
+    background-color: #f8f9fa; /* Light background for the right panel */
+    color: #333;
+    overflow-y: auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Space between header and list */
+}
+
+.header h2 {
+    margin: 0;
+    flex: 1; /* Allow the heading to take available space */
+}
+
+.btn-create-group, .btn-upload-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff; /* White background */
+    color: #007bff; /* Blue color */
+    font-size: 24px;
+    text-decoration: none;
+    border: 2px solid #007bff; /* Blue border */
+    transition: background-color 0.3s, color 0.3s;
+    margin-left: 10px; /* Space between title and button */
+}
+
+.btn-create-group:hover {
+    background-color: #007bff; /* Background color on hover */
+    color: white; /* Text color on hover */
+}
+
+.btn-upload-image {
+    overflow: hidden; /* Ensure the image fits within the circle */
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+}
+
+.btn-upload-image img {
+    width: 24px; /* Adjust the size of the icon */
+    height: 24px;
+}
+
+.album-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Ensure the list takes the full width of the panel */
+}
+
+.album-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.album-list li:last-child {
+    border-bottom: none;
+}
+
+.album-list a {
+    color: inherit;
+    text-decoration: none;
+    display: block; /* Ensure the link takes the full width of the list item */
+}
+
+.forms-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    width: 80%;
+    max-width: 1000px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Center the forms container */
+}
+
+.form-section {
+    background-color: white;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 600px;
-    width: 100%;
-    margin-top: 20px;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
+.form-group {
+    margin-bottom: 15px;
 }
 
-label {
+.form-group label {
     display: block;
-    margin: 10px 0 5px;
-    color: #555;
+    margin-bottom: 5px;
 }
 
-input[type="text"],
-input[type="number"] {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
     box-sizing: border-box;
 }
 
-button, input[type="submit"], a.btn {
-    display: block;
-    text-align: center;
-    width: 100%;
-    padding: 10px;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 10px 0;
-    transition: background-color 0.3s;
-    text-decoration: none;
-    box-sizing: border-box;
-}
-
-button:hover, input[type="submit"]:hover, a.btn:hover {
-    background-color: #0056b3;
-}
-
-.button-group {
+/* 照片选择区域 */
+.photo-selection {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 10px;
 }
 
-.button-group .btn {
-    width: calc(50% - 5px);
+.photo-item {
+    flex: 1 1 calc(33.333% - 10px); /* 一行三个 */
     box-sizing: border-box;
+    margin-bottom: 10px;
+    position: relative;
 }
 
-table {
+.photo-item img {
     width: 100%;
-    border-collapse: collapse;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-th, td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
+.photo-item input {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 5px;
+    cursor: pointer;
 }
-.error-message {
-    color: #f44336;
-    font-size: 14px;
-    margin-top: 5px;
 
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left-panel, .right-panel {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd; /* Border between panels */
+    }
 }

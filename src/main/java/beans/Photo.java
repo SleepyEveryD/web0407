@@ -5,7 +5,7 @@ import java.util.Date;
 public class Photo {
     private int id_image;
     private String title;
-    private Date upload_date;
+    private Date uploadDate;
     private String descritpion;
     private String path;
     private String id_user;
@@ -13,10 +13,11 @@ public class Photo {
     public Photo(int id_image, String title, Date upload_date, String descritpion, String path, String id_user) {
         this.id_image = id_image;
         this.title = title;
-        this.upload_date = upload_date;
+        this.uploadDate = upload_date;
         this.descritpion = descritpion;
         this.path = path;
         this.id_user = id_user;
+
     }
 
     public Photo() {
@@ -32,24 +33,54 @@ public class Photo {
         this.id_image = id;
         this.path = path;
         this.title = title;
-        this.upload_date = uploadDate;
+        this.uploadDate = uploadDate;
     }
 
-    public int getId_Image() { return id_image; }
-    public void setId_Image(int id) { this.id_image = id; }
+    public int getId_image() {
+        return id_image;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setId_image(int id_image) {
+        this.id_image = id_image;
+    }
 
-    public Date getUploadDate() { return upload_date; }
-    public void setUploadDate(Date upload_date) { this.upload_date = upload_date; }
+    public String getTitle() {
+        return title;
+    }
 
-    public String getDescription() { return descritpion; }
-    public void setDescription(String descritpion) { this.descritpion = descritpion; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public String getPath() { return path; }
-    public void setPath(String path) { this.path = path; }
+    public Date getUploadDate() {
+        return uploadDate;
+    }
 
-    public String getId_User() { return id_user; }
-    public void setId_User(String idUser) { this.id_user = idUser; }
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
+    public String getDescritpion() {
+        return descritpion;
+    }
+
+    public void setDescritpion(String descritpion) {
+        this.descritpion = descritpion;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
+    }
 }

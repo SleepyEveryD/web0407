@@ -74,12 +74,13 @@ public class Home_Page extends HttpServlet {
             try {
                 myalbumList = albumDAO.getAlbumByUser(username);
                 otherAlbumList = albumDAO.getAlbumNotByUser(username);
-                //myImageList = photoDAO.getAllPhotos(username);
+                myImageList = photoDAO.getAllPhotos(username);
                 final WebContext ctx = new WebContext(request, response, getServletContext(), request.getLocale());
                 ctx.setVariable("myalbumList", myalbumList);
                 ctx.setVariable("otherAlbumList", otherAlbumList);
                 ctx.setVariable("username", username);
-                String html = templateEngine.process("home_page", ctx);
+                ctx.setVariable("myImageList", myImageList);
+                String html = templateEngine.process("home_page.html", ctx);
 
                 response.setContentType("text/html");
                 response.setCharacterEncoding("UTF-8");

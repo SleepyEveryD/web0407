@@ -98,30 +98,59 @@ public class AlbumDAO extends HttpServlet {
      * @return code
      * @throws SQLException sql error description
      */
-    public int createAlbum(String title, String username) throws SQLException {
-        String query = "INSERT into album (title, IDUser) VALUES(?, ?)";
-        int code = 0;
+    public int createAlbum(String title, String username, String description) throws SQLException {
+        String query;
+        if (description == null) {
+            query = "INSERT INTO album (title, username) VALUES (?, ?)";
+        } else {
+            query = "INSERT INTO album (title, username, description) VALUES (?, ?, ?)";
+        }
+        int generatedId = -1; // 用于存储生成的 ID
         PreparedStatement pstatement = null;
+        ResultSet generatedKeys = null;
+
         try {
-            pstatement = connection.prepareStatement(query);
+            // 创建 PreparedStatement 对象，并指定返回自动生成的键
+            pstatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             pstatement.setString(1, title);
             pstatement.setString(2, username);
-            code = pstatement.executeUpdate();
+            if (description != null) {
+                pstatement.setString(3, description);
+            }
+
+            // 执行插入操作
+            pstatement.executeUpdate();
+            System.out.println("Album created successfully");
+
+            // 获取生成的主键
+            generatedKeys = pstatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                generatedId = generatedKeys.getInt(1); // 获取第一个生成的主键
+            }
+
         } catch (SQLException e) {
-            throw new SQLException(e);
+            System.err.println("Error while creating album: " + e.getMessage());
+            throw new SQLException("Error while creating album.", e); // 抛出带详细信息的异常
         } finally {
-            try {
-                if (pstatement != null) {
-                    pstatement.close();
+            // 关闭 ResultSet 和 PreparedStatement
+            if (generatedKeys != null) {
+                try {
+                    generatedKeys.close();
+                } catch (SQLException closeEx) {
+                    System.err.println("Error occurred while closing the ResultSet: " + closeEx.getMessage());
                 }
-            } catch (Exception e1) {
-                System.out.println("create album error");
+            }
+            if (pstatement != null) {
+                try {
+                    pstatement.close();
+                } catch (SQLException closeEx) {
+                    System.err.println("Error occurred while closing the PreparedStatement: " + closeEx.getMessage());
+                }
             }
         }
-        return code;
+
+        return generatedId;
     }
-
-
 
 
 

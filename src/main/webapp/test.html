@@ -1,187 +1,113 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Homepage</title>
-  <link rel="stylesheet" href="homePage.css"> <!-- Link to the external CSS file -->
+  <title>Centered Images with Buttons</title>
   <style>
-    /* 模态窗背景 */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000; /* 使其置顶 */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
     }
 
-    /* 模态窗内容 */
-    .modal-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      width: 600px; /* 可以根据需要调整大小 */
-      z-index: 1001;
+    .container {
+      text-align: center;
     }
 
-    /* 关闭按钮 */
-    .close-btn {
-      background-color: red;
-      color: white;
+    .buttons {
+      margin-bottom: 20px;
+    }
+
+    .buttons form {
+      display: inline-block;
+      margin: 0 10px;
+    }
+
+    .buttons button {
+      padding: 10px 20px;
       border: none;
-      padding: 5px 10px;
+      background-color: #007bff;
+      color: #fff;
       cursor: pointer;
-      float: right;
-      text-decoration: none;
+      font-size: 16px;
+      border-radius: 5px;
     }
 
-    /* 使用 :target 伪类显示模态窗 */
-    #album-modal:target {
-      display: block;
+    .buttons button:hover {
+      background-color: #0056b3;
     }
 
-    /* 照片选择区域 */
-    .photo-selection {
+    .image-gallery {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 10px;
+      max-width: 800px; /* Optional: Set a max-width to avoid stretching */
+      margin: 0 auto; /* Center the gallery */
     }
 
     .photo-item {
-      flex: 1 1 calc(33.333% - 10px); /* 一行三个 */
-      box-sizing: border-box;
-      margin-bottom: 10px;
+      flex: 1 1 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 150px;
+      height: 150px;
       position: relative;
     }
 
     .photo-item img {
       width: 100%;
-      height: auto;
+      height: 100%;
       object-fit: cover;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
     }
 
-    .photo-item input {
+    .photo-item .title {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(255, 255, 255, 0.7);
-      border: none;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
       padding: 5px;
-      cursor: pointer;
-    }
-
-    /* 额外样式 */
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-<p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
 <div class="container">
-  <div class="left-panel">
-    <div class="header">
-      <h2>我的相册</h2>
-      <a href="#album-modal" class="btn-create-group">➕</a>
+  <div class="buttons">
+    <!-- Previous Button -->
+    <form th:if="${currentPage > 1}" th:action="@{/album}" method="get">
+      <input type="hidden" name="page" th:value="${currentPage - 1}">
+      <button type="submit" class="prev">Precedente</button>
+    </form>
 
-      <a href="#modal" class="btn-upload-image">
-        <img src="uploadImage.png" alt="Upload Image">
+    <!-- Next Button -->
+    <form th:if="${hasNextPage}" th:action="@{/album}" method="get">
+      <input type="hidden" name="page" th:value="${currentPage + 1}">
+      <button type="submit" class="next">Successivo</button>
+    </form>
+  </div>
+  <div class="image-gallery">
+    <div class="photo-item" th:each="photo : ${photos}">
+      <a th:href="@{/imagePage(id=${photo.id_image})}">
+        <img th:src="@{${photo.path}}" alt="Photo">
+        <div class="title" th:text="${photo.title}"></div>
       </a>
     </div>
-    <ul class="album-list">
-      wait for my albums
-    </ul>
-  </div>
-  <div class="right-panel">
-    <div class="header">
-      <h2>其他相册</h2>
-    </div>
-    <ul class="album-list">
-      wait for other albums
-    </ul>
+    <!-- Empty photo-item divs to ensure 5 items in total if needed -->
+    <div class="photo-item" th:if="${#lists.size(photos) < 5}"></div>
+    <div class="photo-item" th:if="${#lists.size(photos) < 4}"></div>
+    <div class="photo-item" th:if="${#lists.size(photos) < 3}"></div>
+    <div class="photo-item" th:if="${#lists.size(photos) < 2}"></div>
   </div>
 </div>
-
-<!-- 增加专辑模态窗结构 -->
-<div id="album-modal" class="modal-overlay">
-  <div class="modal-content">
-    <!-- 关闭按钮 -->
-    <a href="#" class="close-btn">关闭</a>
-    <!-- 增加专辑表单 -->
-    <form method="POST" action="/CreateAlbum" enctype="multipart/form-data">
-      <!-- 标题输入 -->
-      <div class="form-group">
-        <label for="album-title">专辑标题</label>
-        <input type="text" id="album-title" name="title" placeholder="请输入专辑标题" required>
-      </div>
-
-      <!-- 描述输入 -->
-      <div class="form-group">
-        <label for="album-description">专辑描述</label>
-        <textarea id="album-description" name="description" placeholder="请输入专辑描述" required></textarea>
-      </div>
-
-      <!-- 选择图片 -->
-      <div class="form-group">
-        <label for="album-images">选择图片</label>
-        <div class="photo-selection">
-          <!-- 通过 Thymeleaf 动态生成照片项 -->
-          <div th:each="photo : ${photos}" class="photo-item">
-            <img th:src="@{${photo.url}}" alt="Photo" />
-            <input type="checkbox" name="selectedPhotos" th:value="${photo.id}"> 选择
-          </div>
-        </div>
-      </div>
-
-      <!-- 提交按钮 -->
-      <button type="submit">创建专辑</button>
-    </form>
-  </div>
-</div>
-
-<!-- 上传照片模态窗结构 -->
-<div id="modal" class="modal-overlay">
-  <div class="modal-content">
-    <!-- 关闭按钮 -->
-    <a href="#" class="close-btn">关闭</a>
-    <!-- 上传照片表单 -->
-    <form method="POST" action="/Upload" enctype="multipart/form-data">
-      <!-- 标题输入 -->
-      <input type="text" name="title" placeholder="请输入标题" required style="display: block; margin-bottom: 10px;">
-
-      <!-- 描述输入 -->
-      <textarea name="description" placeholder="请输入描述" style="display: block; margin-bottom: 10px;"></textarea>
-
-      <!-- 文件输入 -->
-      <input type="file" name="file" required style="display: block; margin-bottom: 10px;">
-
-      <!-- 提交按钮 -->
-      <button type="submit">提交</button>
-    </form>
-  </div>
-</div>
-
 </body>
 </html>
