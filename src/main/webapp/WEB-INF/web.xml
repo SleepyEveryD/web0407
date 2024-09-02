@@ -29,6 +29,16 @@
     <param-name>dbDriver</param-name>
     <param-value>com.mysql.cj.jdbc.Driver</param-value>
   </context-param>
+  <!-- Error Page Configuration -->
+  <error-page>
+    <error-code>404</error-code>
+    <location>/homepage</location>  <!-- Redirects to homepage -->
+  </error-page>
+
+  <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/homepage</location>  <!-- Redirects to a custom error page -->
+  </error-page>
 
 
 

@@ -33,15 +33,33 @@
 <!-- 评论表单 -->
 <div>
   <form action="AddComment" method="post">
+    <!-- 隐藏输入，用于传递 photoId -->
     <input type="hidden" name="photoId" th:value="${photo.id_image}">
+
+    <!-- 新增隐藏输入，用于传递 albumId -->
+    <input type="hidden" name="albumId" th:value="${albumId}">
+
     <label for="comment">Add a comment:</label>
-    <textarea id="comment" name="commentText" rows="4" cols="50"></textarea><br>
+
+    <!-- 评论文本框 -->
+    <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br>
+
+    <!-- 提交按钮 -->
     <input type="submit" value="Submit">
+  </form>
+</div>
+
+<!-- 条件显示的删除按钮 -->
+<div th:if="${owner}"> <!-- 如果 owner 为 true，显示按钮 -->
+  <form action="DeleteImageFromAlbum" method="post">
+    <input type="hidden" name="photoId" th:value="${photo.id_image}">
+    <input type="hidden" name="albumId" th:value="${albumId}">
+    <input type="submit" value="Delete Photo">
   </form>
 </div>
 
 <!-- 返回主页和专辑页面的链接 -->
 <a th:href="@{/homepage}">Return to Homepage</a> <!-- 确保链接路径正确 -->
-<a th:href="@{'/AlbumPage?id=' + ${albumId}}">Return to Album Page</a> <!-- 确保链接路径正确 -->
+<a th:href="@{'/albumpage?albumId=' + ${albumId}}">Return to Album Page</a> <!-- 确保链接路径正确 -->
 </body>
 </html>

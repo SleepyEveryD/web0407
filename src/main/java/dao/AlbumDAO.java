@@ -153,7 +153,29 @@ public class AlbumDAO extends HttpServlet {
     }
 
 
-
+    public int removePhotoFromAlbum(int album_id, int photo_id) throws SQLException {
+        String query = "DELETE FROM album_photo WHERE album_id = ? AND photo_id = ?";
+        int code = 0;
+        PreparedStatement pstatement = null;
+        try {
+            pstatement = connection.prepareStatement(query);
+            pstatement.setInt(1, album_id);
+            pstatement.setInt(2, photo_id);
+            code = pstatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException(e);
+        } finally {
+            try {
+                if (pstatement != null) {
+                    pstatement.close();
+                }
+            } catch (Exception e1) {
+                System.out.println("remove from album error");
+            }
+        }
+        return code;
     }
+}
 
 

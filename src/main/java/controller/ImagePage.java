@@ -60,31 +60,26 @@ public class ImagePage extends HttpServlet {
 
         String idStr = request.getParameter("photoId");
         String albumIdStr = request.getParameter("albumId");
-        System.out.println("idStr: " + idStr + "albumIdStr: " + albumIdStr);
-        int id;
-        id = Integer.parseInt(idStr);
-/*
-        if (idStr == null|| albumIdStr == null) {
+        System.out.println("ImagePage doGet: photoId: " + idStr + " albumId: " + albumIdStr);
+
+
+        int photoID =-1;
+        int albumId =-1;
+        try {
+            photoID = Integer.parseInt(idStr);
+            albumId =Integer.parseInt(albumIdStr);
+
+
+        } catch (NumberFormatException e) {
             response.sendRedirect("./homepage");
             return;
         }
 
-        int id;
-        int albumId;
-        try {
-            id = Integer.parseInt(idStr);
-            albumId =Integer.parseInt(albumIdStr);
-        } catch (NumberFormatException e) {
-            response.sendRedirect("./homepage");
-            //return;
-        }
-
- */
 
         Photo photo;
         try {
             PhotoDAO photoDAO = new PhotoDAO(connection);
-            photo = photoDAO.getPhotoById(id);
+            photo = photoDAO.getPhotoById(photoID);
         } catch (SQLException e) {
             throw new ServletException("Error retrieving photo", e);
         }
@@ -95,21 +90,25 @@ public class ImagePage extends HttpServlet {
         }
 
         System.out.println("photo not null");
-        /*
+
         List<Comment> comments;
         try {
-            comments = commentDAO.getCommentsByPhotoId(id);
+            CommentDAO commentDAO = new CommentDAO(connection);
+            comments = commentDAO.getCommentsByPhoto(photoID, albumId);
         } catch (SQLException e) {
             throw new ServletException("Error retrieving comments", e);
         }
 
         // Prepare Thymeleaf context and render the page
+        boolean owner = photo!=null &&photo.getId_user().equals(user.getUsername());
 
-         */
+
+
         final WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
         webContext.setVariable("photo", photo);
-        //webContext.setVariable("albumId", albumId);
-        //webContext.setVariable("comments", comments);
+        webContext.setVariable("albumId", albumIdStr);
+        webContext.setVariable("comments", comments);
+        webContext.setVariable("owner", owner);
 
         // Process and output the HTML
         response.setContentType("text/html");

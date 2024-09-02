@@ -16,6 +16,43 @@ public class CommentDAO {
     public CommentDAO(Connection connection) {
         this.connection = connection;
     }
+    public List<Comment> getCommentsByPhoto(int photo_id, int album_id) throws SQLException {
+        List<Comment> comments = new ArrayList<>();
+        String query = "SELECT text, creation_time, IDUser FROM Comment WHERE IDPhoto = ? AND IDAlbum = ? ORDER BY creation_time DESC";
+        ResultSet result = null;
+        PreparedStatement pstatement = null;
+        try {
+            pstatement = connection.prepareStatement(query);
+            pstatement.setInt(1, photo_id);
+            pstatement.setInt(2, album_id);
+            result = pstatement.executeQuery();
+            while (result.next()) {
+                Comment comment = new Comment();
+                comment.setText(result.getString("text"));
+                comment.setTimestamp(result.getTimestamp("creation_time"));
+                comment.setUsername(result.getString("IDUser"));
+                comments.add(comment);
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+            } catch (Exception e1) {
+                throw new SQLException(e1);
+            }
+            try {
+                if (pstatement != null) {
+                    pstatement.close();
+                }
+            } catch (Exception e2) {
+                throw new SQLException(e2);
+            }
+        }
+        return comments;
+    }
 
     /**
      * Adds a comment to the database.
@@ -25,15 +62,30 @@ public class CommentDAO {
      * @param text    The comment text
      * @throws SQLException If an SQL error occurs
      */
-    public void addComment(int photoId, String userId, String text) throws SQLException {
-        String query = "INSERT INTO comment (IDPhoto, IDUser, text) VALUES (?, ?, ?)";
+
+    public int addComment(int albumId, int photoId, String userId, String text) throws SQLException {
+        String query = "INSERT INTO comment (IDAlbum, IDPhoto, IDUser, text) VALUES (?, ?, ?, ?)";
+        int code = 0;
+
+        // Use try-with-resources to automatically close PreparedStatement
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, photoId);
-            ps.setString(2, userId);
-            ps.setString(3, text);
-            ps.executeUpdate();
+            // Set parameters
+            ps.setInt(1, albumId);
+            ps.setInt(2, photoId);
+            ps.setString(3, userId);
+            ps.setString(4, text);
+
+            // Execute update and get affected rows count
+            code = ps.executeUpdate();
+        } catch (SQLException e) {
+            // Log or handle the SQLException as needed
+            System.err.println("Error adding comment: " + e.getMessage());
+            throw new SQLException("Failed to add comment", e);
         }
+
+        return code;
     }
+
 
 
     /**
@@ -59,6 +111,28 @@ public class CommentDAO {
             }
         }
         return comments;
+    }
+
+
+    public void deleteCommentsByPhotoAndAlbum(int photo_id, int album_id) throws SQLException {
+        String query = "DELETE FROM Comment WHERE IDPhoto = ? AND IDAlbum = ?";
+        PreparedStatement pstatement = null;
+        try {
+            pstatement = connection.prepareStatement(query);
+            pstatement.setInt(1, photo_id);
+            pstatement.setInt(2, album_id);
+            pstatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        } finally {
+            try {
+                if (pstatement != null) {
+                    pstatement.close();
+                }
+            } catch (Exception e2) {
+                throw new SQLException(e2);
+            }
+        }
     }
 
 

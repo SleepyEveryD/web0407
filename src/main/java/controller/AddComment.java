@@ -2,6 +2,7 @@ package controller;
 
 import beans.Comment;
 import beans.Photo;
+import beans.User;
 import dao.CommentDAO;
 import dao.PhotoDAO;
 import org.thymeleaf.TemplateEngine;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
 
 
 /**
@@ -117,8 +119,55 @@ public class AddComment extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("In server side code of AddComment servlet");
+        CommentDAO c_dao = new CommentDAO(connection);
+        /* Extracts parameters from POST and session*/
+        User user = (User)request.getSession().getAttribute("user");
+        if(user == null) {
+            forwardToErrorPage(request, response, "Please login to add comments");
+            return;
+        }
+        String username = user.getUsername();
+        String comment = null;
+        String req_photo_id = null;
+        String req_album_id = null;
+        comment = request.getParameter("comment");
+        if (comment == null|| comment.isEmpty()||comment.trim().isEmpty()) forwardToErrorPage( request, response, "Comment can not be empty");
+        req_photo_id = request.getParameter("photoId");
+        req_album_id = request.getParameter("albumId");
+        System.out.println( " req_photo_id: " + req_photo_id + " req_album_id: " + req_album_id + " comment: " + comment);
+        int photo_id = -1, album_id = -1;
+        /* Initial parameters validation */
+        try {
+            photo_id = Integer.parseInt(req_photo_id);
+            album_id = Integer.parseInt(req_album_id);
+        } catch (NumberFormatException nf){
+            forwardToErrorPage(request, response, "Photo's ID must be an integer value");
+            return;
+        }
 
+        System.out.println(""+photo_id+" "+album_id+" "+username+" "+comment);
 
+        try {
+            c_dao.addComment(album_id,photo_id,username,comment.trim());
+            System.out.println("added comment");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            forwardToErrorPage(request, response, "Unable to add comment");
+            return;
+        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.sendRedirect(
+                String.format(
+                        "./imagePage?albumId=%d&page=%d&photoId=%d",
+
+                        album_id,
+                        0,
+                        photo_id
+                )
+        );
+        return;
     }
 
     private void forwardToErrorPage(HttpServletRequest request, HttpServletResponse response, String error) throws ServletException, IOException{

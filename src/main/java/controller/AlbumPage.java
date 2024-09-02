@@ -126,7 +126,7 @@ public class AlbumPage extends HttpServlet {
             webContext.setVariable("hasPreviousPage", hasPreviousPage);
             webContext.setVariable("albumId", albumId);
 
-            //webContext.setVariable("albumID", idstr);
+
 
             String html = templateEngine.process("AlbumPage.html", webContext);
 
