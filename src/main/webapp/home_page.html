@@ -5,17 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery</title>
     <link rel="stylesheet" href="homePage.css"> <!-- Link to the external CSS file -->
+    <style>
+        /* Add some basic styles for the logout button */
+        .logout-button {
+            display: inline-block;
+            padding: 10px 20px;
+            border: none;
+            background-color: #dc3545;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body>
+<!-- Logout Button -->
+<div style="text-align: right; padding: 10px;">
+    <a href="./logout" class="logout-button">Logout</a>
+</div>
+
 <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
 <div class="container">
     <div class="left-panel">
         <div class="header">
             <h2>My Album</h2>
-            <a href="#album-modal" class="btn-create-group">➕</a>
-            <a href="#modal" class="btn-upload-image">
-                <img src="uploadImage.png" alt="Upload Image">
-            </a>
         </div>
         <ul class="album-list">
             <!-- 使用 Thymeleaf 显示用户的相册列表 -->
@@ -25,9 +44,6 @@
                 <span th:text="${#dates.format(album.creation_date, 'yyyy-MM-dd')}"></span>
                 <!-- 修改链接为跳转到 /albumpage，并使用相册ID进行区分 -->
                 <a th:href="@{/albumpage(albumId=${album.id_album})}">view</a>
-
-
-
             </li>
         </ul>
     </div>
@@ -42,7 +58,7 @@
                 <span th:text="${album.title}"></span>
                 <span th:text="${#dates.format(album.creation_date, 'yyyy-MM-dd')}"></span>
                 <!-- 同样修改链接为跳转到 /AlbumPage，并使用相册ID进行区分 -->
-                <a th:href="@{/albumpage/{id}(albumId=${album.id_album})}">view</a>
+                <a th:href="@{/albumpage(albumId=${album.id_album})}">view</a>
             </li>
         </ul>
     </div>

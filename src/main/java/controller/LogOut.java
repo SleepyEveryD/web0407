@@ -32,7 +32,6 @@ public class LogOut extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user != null) {
-            MainController.removeOnlineUser(user); // 从在线用户列表中移除用户
             session.removeAttribute("user"); // 清除用户会话信息
             session.invalidate(); // 使会话失效，清除所有相关的会话数据
 
@@ -40,6 +39,6 @@ public class LogOut extends HttpServlet {
         }
 
 
-        response.sendRedirect(request.getContextPath() + "/index.html");
+        response.sendRedirect("login.html");
     }
 }
