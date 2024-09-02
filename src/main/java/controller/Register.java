@@ -63,7 +63,11 @@ public class Register extends HttpServlet {
 
         try {
             UserDAO userDAO = new UserDAO(DBConnection.getConnection(getServletContext()));
-
+            if (userDAO.checkUsernameExist(username)) {
+                session.setAttribute("registerError", "Username already taken");
+                templateEngine.process("register.html", webContext, response.getWriter());
+                return;
+            }
             // 检查邮箱是否已经注册
             if (userDAO.checkUserExist(email)) {
                 session.setAttribute("registerError", "Email already registered");

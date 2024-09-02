@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Photo Details</title>
+</head>
+<body>
+<!-- 显示照片详细信息 -->
+<div>
+  <h1 th:text="${photo.title}">Photo Title</h1>
+  <p th:text="${photo.descritpion}">Photo Description</p>
+  <img th:src="${photo.path}" alt="Photo">
+  <p>Uploaded on: <span th:text="${photo.uploadDate}"></span></p>
+</div>
+
+<!-- 评论部分 -->
+<div>
+  <h2>Comments</h2>
+  <div th:if="${comments != null && !comments.isEmpty()}"> <!-- 检查 comments 是否不为空 -->
+    <div th:each="comment : ${comments}">
+      <p>
+        <strong th:text="${comment.username}">Username</strong>:
+        <span th:text="${comment.text}">Comment Text</span>
+        <br>
+        <small th:text="${#dates.format(comment.timestamp, 'yyyy-MM-dd HH:mm:ss')}">Timestamp</small>
+      </p>
+    </div>
+  </div>
+  <div th:if="${comments == null || comments.isEmpty()}">
+    <p>No comments yet.</p>
+  </div>
+</div>
+
+<!-- 评论表单 -->
+<div>
+  <form action="AddComment" method="post">
+    <input type="hidden" name="photoId" th:value="${photo.id_image}">
+    <label for="comment">Add a comment:</label>
+    <textarea id="comment" name="commentText" rows="4" cols="50"></textarea><br>
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+<!-- 返回主页和专辑页面的链接 -->
+<a th:href="@{/homepage}">Return to Homepage</a> <!-- 确保链接路径正确 -->
+<a th:href="@{'/AlbumPage?id=' + ${albumId}}">Return to Album Page</a> <!-- 确保链接路径正确 -->
+</body>
+</html>

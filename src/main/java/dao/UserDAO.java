@@ -186,5 +186,19 @@ public class UserDAO extends HttpServlet {
         }
         return null;
     }
+    public boolean checkUsernameExist(String username) throws SQLException {
+        String query = "SELECT COUNT(*) FROM `user` WHERE username = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0; // 如果count大于0，说明用户名已经存在
+                }
+            }
+        }
+        return false;
+    }
+
 
 }
