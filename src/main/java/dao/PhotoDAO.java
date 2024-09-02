@@ -38,7 +38,7 @@ public class PhotoDAO {
         try {
             pstatement = connection.prepareStatement(query);
             pstatement.setInt(1, album_id);
-            pstatement.setInt(2, start-1); // 设置 LIMIT 的 offset
+            pstatement.setInt(2, start); // 设置 LIMIT 的 offset
             result = pstatement.executeQuery();
 
             while (result.next()) {

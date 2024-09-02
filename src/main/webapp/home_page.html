@@ -24,7 +24,7 @@
                 <span th:text="${album.title}"></span>
                 <span th:text="${#dates.format(album.creation_date, 'yyyy-MM-dd')}"></span>
                 <!-- 修改链接为跳转到 /albumpage，并使用相册ID进行区分 -->
-                <a th:href="@{/albumpage(id=${album.id_album})}">view</a>
+                <a th:href="@{/albumpage(albumId=${album.id_album})}">view</a>
 
 
 
@@ -42,7 +42,7 @@
                 <span th:text="${album.title}"></span>
                 <span th:text="${#dates.format(album.creation_date, 'yyyy-MM-dd')}"></span>
                 <!-- 同样修改链接为跳转到 /AlbumPage，并使用相册ID进行区分 -->
-                <a th:href="@{/albumpage/{id}(id=${album.id_album})}">view</a>
+                <a th:href="@{/albumpage/{id}(albumId=${album.id_album})}">view</a>
             </li>
         </ul>
     </div>

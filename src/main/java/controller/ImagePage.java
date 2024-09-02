@@ -56,11 +56,14 @@ public class ImagePage extends HttpServlet {
             System.out.println("You need to login first");
             return;
         }
+        System.out.println("user logged in");
 
-        String idStr = request.getParameter("imageId");
+        String idStr = request.getParameter("photoId");
         String albumIdStr = request.getParameter("albumId");
-
-
+        System.out.println("idStr: " + idStr + "albumIdStr: " + albumIdStr);
+        int id;
+        id = Integer.parseInt(idStr);
+/*
         if (idStr == null|| albumIdStr == null) {
             response.sendRedirect("./homepage");
             return;
@@ -73,8 +76,10 @@ public class ImagePage extends HttpServlet {
             albumId =Integer.parseInt(albumIdStr);
         } catch (NumberFormatException e) {
             response.sendRedirect("./homepage");
-            return;
+            //return;
         }
+
+ */
 
         Photo photo;
         try {
@@ -103,7 +108,7 @@ public class ImagePage extends HttpServlet {
          */
         final WebContext webContext = new WebContext(request, response, getServletContext(), request.getLocale());
         webContext.setVariable("photo", photo);
-        webContext.setVariable("albumId", albumId);
+        //webContext.setVariable("albumId", albumId);
         //webContext.setVariable("comments", comments);
 
         // Process and output the HTML

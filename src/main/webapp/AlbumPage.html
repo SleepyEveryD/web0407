@@ -85,22 +85,23 @@
     <div class="buttons">
         <!-- Previous Button -->
         <form th:if="${currentPage > 1}" th:action="@{/albumpage}" method="get">
-            <input type="hidden" name="id" th:value="${albumID}">
+            <input type="hidden" name="albumId" th:value="${albumId}">
             <input type="hidden" name="page" th:value="${currentPage - 1}">
             <button type="submit" class="prev">Precedente</button>
         </form>
 
         <!-- Next Button -->
         <form th:if="${hasNextPage}" th:action="@{/albumpage}" method="get">
-            <input type="hidden" name="id" th:value="${albumID}"> <!-- 包含 id 参数 -->
+            <input type="hidden" name="albumId" th:value="${albumId}"> <!-- 包含 id 参数 -->
             <input type="hidden" name="page" th:value="${currentPage + 1}"> <!-- 包含 page 参数 -->
             <button type="submit" class="next">Successivo</button>
         </form>
     </div>
     <div class="image-gallery">
         <div class="photo-item" th:each="photo : ${photos}">
-            <a th:href="@{/imagePage(albumId=${photo.albumId}, photoId=${photo.id_image})}">
-                <img th:src="@{${photo.path}}" alt="Photo">
+            <a th:href="@{/imagePage(albumId=${albumId}, photoId=${photo.id_image})}">
+
+            <img th:src="@{${photo.path}}" alt="Photo">
                 <div class="title" th:text="${photo.title}"></div>
             </a>
         </div>

@@ -73,37 +73,36 @@ public class AlbumPage extends HttpServlet {
             return;
         }
         System.out.println("it's AlbumPage doGet");
-        String idstr = request.getParameter("id");
-        int id = (idstr != null) ? Integer.parseInt(idstr) : 0;
+        String idstr = request.getParameter("albumId");
+        int albumId = (idstr != null) ? Integer.parseInt(idstr) : 0;
 
         String pageParam = request.getParameter("page");//html 超链接还要写page
         int page = (pageParam!= null) ? Integer.parseInt(pageParam) : 1;
-        System.out.println("AlbumPage: id=" + id + " page=" + page);
+        System.out.println("AlbumPage: albumId=" + albumId + " page=" + page);
         PhotoDAO photoDAO = new PhotoDAO(connection);
         // 获取 URL 查询参数 id
         int totalPages;
         try {
-            totalPages = photoDAO.getTotalPageCountByAlbum(id);
+            totalPages = photoDAO.getTotalPageCountByAlbum(albumId);
             System.out.println(" totalPages=" + totalPages);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        if (totalPages == 0 ||pageParam != null || page<=0 ||page>totalPages ){
+        if (totalPages == 0  || page<=0 ||page>totalPages ){
+            System.out.println("" + pageParam + " " + totalPages + " " + page);
             response.sendRedirect("./homepage");
         }else {
 
             int start = 0;
 
-            if (page > 0) start = 5 * (page - 1)+1; // 计算开始位置
+            if (page > 0) start = 5 * (page - 1); // 计算开始位置
             System.out.println("start=" + start);
-            String classesPath = getServletContext().getRealPath("/WEB-INF/classes");
             List<Photo> photos = null; // 根据 id 和当前页获取照片
             try {
-                photos = photoDAO.getPhotosByAlbum(id, start);
+                photos = photoDAO.getPhotosByAlbum(albumId, start);
                 System.out.println("Photos size=" + photos.size());
                 for (Photo photo : photos) {
-                    String filePath = classesPath + "/" + photo.getPath();
                     System.out.println( "" + photo.getId_user() + " " + photo.getTitle() + " " + photo.getId_image()+ " " + photo.getPath());
 
 
@@ -125,7 +124,9 @@ public class AlbumPage extends HttpServlet {
             webContext.setVariable("currentPage", page);
             webContext.setVariable("hasNextPage", hasNextPage);
             webContext.setVariable("hasPreviousPage", hasPreviousPage);
-            webContext.setVariable("albumID", id);
+            webContext.setVariable("albumId", albumId);
+
+            //webContext.setVariable("albumID", idstr);
 
             String html = templateEngine.process("AlbumPage.html", webContext);
 
